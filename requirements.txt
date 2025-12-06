@@ -228,4 +228,10 @@ pywin32
 tk
 mysql
 mssql
+pandas
+requests
+python-dateutil
+python-pptx
+matplotlib
+sqlalchemy
 
