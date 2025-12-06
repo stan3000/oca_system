@@ -228,18 +228,23 @@ pywin32
 tk
 mysql
 mssql
-pandas
 
 python-dateutil
 python-pptx
 
 sqlalchemy
 
-streamlit
-pandas
-requests
 matplotlib
 python-pptx
 sqlalchemy
 python-dateutil
+
+
+streamlit==1.31.0
+pandas
+matplotlib
+requests
+python-docx
+openpyxl
+
 
