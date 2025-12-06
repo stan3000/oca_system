@@ -16,7 +16,8 @@ import streamlit as st
 USERS = {
     "admin": "password123",
     "treasurer": "finance2024",
-    "secretary": "attend2024"
+    "secretary": "attend2024",
+    "oca": "oca2026"
 }
 
 # =========================================================
@@ -4733,3 +4734,4 @@ def analyze_membership_debt():
 #
 # if __name__ == "__main__":
 #     main()
+
