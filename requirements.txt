@@ -223,8 +223,9 @@ zopfli==0.2.3.post1
 #  UPDATED
 #===============================================
 
-streamlit==1.37.0   (unless required)
+streamlit
 pywin32
 tk
 mysql
 mssql
+
