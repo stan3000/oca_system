@@ -9,8 +9,20 @@ st.set_page_config(page_title="OCA Attendance Dashboard", layout="wide")
 
 
 # =========================================================
-# LOGIN FUNCTION
+# LOGIN FUNCTION (NO SECRETS REQUIRED)
 # =========================================================
+
+import streamlit as st
+
+# -----------------------------------------
+# HARD-CODED USERS (secure enough for internal apps)
+# -----------------------------------------
+USERS = {
+    "admin": "password123",
+    "treasurer": "finance2024",
+    "secretary": "attend2024"
+}
+
 def login():
     st.title("🔐 Login Required")
 
@@ -19,29 +31,12 @@ def login():
     login_btn = st.button("Login")
 
     # -------------------------
-    # VALIDATE [users] EXISTS IN GLOBAL SECRETS
-    # -------------------------
-    if "users" not in st.secrets:
-        st.error(
-            "🚨 ERROR: No [users] section found in secrets.toml.\n\n"
-            "Open your global secrets file:\n"
-            f"{Path.home() / '.streamlit' / 'secrets.toml'}\n\n"
-            "Paste this inside the file:\n\n"
-            "[users]\n"
-            "admin = \"password123\"\n"
-            "treasurer = \"finance2024\"\n"
-            "secretary = \"attend2024\"\n"
-        )
-        st.stop()
-
-    USERS = st.secrets["users"]
-
-    # -------------------------
     # LOGIN LOGIC
     # -------------------------
     if login_btn:
         if username in USERS and USERS[username] == password:
             st.session_state["logged_in"] = True
+            st.session_state["user_role"] = username
             st.success("Login successful! Redirecting…")
             st.rerun()
         else:
@@ -49,49 +44,39 @@ def login():
 
 
 # =========================================================
-# MAIN DASHBOARD
+# MAIN DASHBOARD CONTROLLER
 # =========================================================
 def main():
-    # st.sidebar.title("📌 OCA Navigation")
 
-    # selected = st.sidebar.radio(
-    #     "Select Page:",
-    #     ["Home", "Attendance Tracker", "OCA Finance", "ACCOUNT API"]
-    # )
+    st.sidebar.markdown(f"👋 Logged in as **{st.session_state['user_role']}**")
 
+    # Logout Button
     if st.sidebar.button("🚪 Logout"):
         st.session_state["logged_in"] = False
+        st.session_state["user_role"] = None
         st.rerun()
 
-    # if selected == "Home":
-    #     st.title("🏠 OCA Dashboard")
-    #     st.write("Welcome to the Owerri Cultural Association Dashboard!")
-    #
-    # elif selected == "Attendance Tracker":
-    #     st.title("📒 Attendance Tracker")
-    #     st.write("Attendance tracker content goes here...")
-    #
-    # elif selected == "OCA Finance":
-    #     st.title("💰 OCA Financial System")
-    #     st.write("Finance dashboard content goes here...")
-    #
-    # elif selected == "ACCOUNT API":
-    #     st.title("🔗 Account API")
-    #     st.write("API content goes here...")
+    # -------------------------------------------------
+    # PLACE YOUR DASHBOARD PAGES BELOW
+    # -------------------------------------------------
+    st.title("🏠 OCA Dashboard")
+    st.write("Welcome to the main dashboard!")
 
 
 # =========================================================
-# LOGIN CONTROLLER
+# LOGIN MASTER CONTROLLER
 # =========================================================
 if "logged_in" not in st.session_state:
     st.session_state["logged_in"] = False
+    st.session_state["user_role"] = None
 
 if not st.session_state["logged_in"]:
     login()
-    st.stop()
+    st.stop()  # ⛔ stop here until logged in
 
 # If logged in → show dashboard
 main()
+
 
 # =========================== LOGIN ENDS HERE ===================
 # =========================== LOGIN ENDS HERE ===================
@@ -278,158 +263,158 @@ def main():
 # ACCOUNT API
 # /////////////////////////////////////////////////////////////////////////////////
 
-# ======================================================================
-# BMO API — TRANSACTION VIEWER
-# ======================================================================
-
-import streamlit as st
-import requests
-# st.write("Loaded secrets:", st.secrets.keys())
-import pandas as pd
-
-def api_transactions_ui():
-
-    st.title("💳 BMO API — Transaction Viewer")
-    st.subheader("🔎 Search Account Transactions")
-    st.markdown("---")
-
-    # ------------------------------------------------------------------
-    # 1️⃣ GET BEARER TOKEN
-    # ------------------------------------------------------------------
-    def get_bearer_token():
-
-        url = "https://sandbox-open-api.bmo.com/oauth2/token"
-
-        data = {
-            "grant_type": "client_credentials",
-            "client_id": st.secrets["BMO_CLIENT_ID"],
-            "client_secret": st.secrets["BMO_CLIENT_SECRET"]
-        }
-
-        headers = {"Content-Type": "application/x-www-form-urlencoded"}
-
-        response = requests.post(url, data=data, headers=headers)
-
-        if response.status_code != 200:
-            st.error(f"❌ Token Error: {response.text}")
-            return None
-
-        return response.json().get("access_token")
-
-    # ------------------------------------------------------------------
-    # 2️⃣ FETCH TRANSACTIONS FROM BMO
-    # ------------------------------------------------------------------
-    def get_transactions(account_id, start_time, end_time, offset=0, limit=100):
-
-        token = get_bearer_token()
-        if not token:
-            return None
-
-        url = (
-            f"https://sandbox-open-api.bmo.com/open-banking/commercial-sb/accounts/"
-            f"{account_id}/transactions"
-            f"?startTime={start_time}&endTime={end_time}&offset={offset}&limit={limit}"
-        )
-
-        headers = {
-            "Accept": "application/json",
-            "Content-Type": "application/json",
-            "authorization": f"Bearer {token}",
-            "x-api-key": st.secrets["BMO_API_KEY"],
-            "distinct": "sybest_streamlit_v1"
-        }
-
-        response = requests.get(url, headers=headers)
-
-        if response.status_code != 200:
-            st.error(f"❌ API Error: {response.text}")
-            return None
-
-        return response.json()
-
-    # ------------------------------------------------------------------
-    # 3️⃣ USER INPUTS
-    # ------------------------------------------------------------------
-    account_id = st.text_input("Account ID", placeholder="Enter BMO Account ID")
-
-    col1, col2 = st.columns(2)
-    start_date = col1.date_input("Start Date")
-    end_date = col2.date_input("End Date")
-
-    start_ts = f"{start_date}T00:00:00Z"
-    end_ts = f"{end_date}T23:59:59Z"
-
-    # ------------------------------------------------------------------
-    # 4️⃣ FETCH BUTTON
-    # ------------------------------------------------------------------
-    if st.button("Fetch Transactions"):
-
-        if not account_id.strip():
-            st.warning("⚠️ Please enter an Account ID.")
-            return
-
-        data = get_transactions(account_id, start_ts, end_ts)
-
-        if not data:
-            return
-
-        tx_list = data.get("transactions", [])
-
-        if len(tx_list) == 0:
-            st.info("ℹ️ No transactions found for this date range.")
-            return
-
-        # ------------------------------------------------------------------
-        # 5️⃣ BUILD DATAFRAME
-        # ------------------------------------------------------------------
-        rows = []
-        for tx in tx_list:
-            d = tx["depositTransaction"]
-            rows.append({
-                "Transaction ID": d["transactionId"],
-                "Description": d["description"],
-                "Amount": d["amount"],
-                "Debit/Credit": d["debitCreditMemo"],
-                "Posted Timestamp": d["postedTimestamp"],
-                "Reference": d["bankReferenceNumber"]
-            })
-
-        df = pd.DataFrame(rows)
-
-        # ------------------------------------------------------------------
-        # 6️⃣ SUMMARY METRICS
-        # ------------------------------------------------------------------
-        st.markdown("### 📊 Summary")
-
-        colA, colB, colC = st.columns(3)
-
-        total_credits = df[df["Debit/Credit"] == "CREDIT"]["Amount"].sum()
-        total_debits = df[df["Debit/Credit"] == "DEBIT"]["Amount"].sum()
-        net_flow = df["Amount"].sum()
-
-        colA.metric("Total Credits", f"${total_credits:,.2f}")
-        colB.metric("Total Debits", f"${total_debits:,.2f}")
-        colC.metric("Net Cash Flow", f"${net_flow:,.2f}")
-
-        # ------------------------------------------------------------------
-        # 7️⃣ TABLE VIEW
-        # ------------------------------------------------------------------
-        st.markdown("### 📄 Transaction Details")
-        st.dataframe(df, use_container_width=True)
-
-        # ------------------------------------------------------------------
-        # 8️⃣ DOWNLOAD CSV
-        # ------------------------------------------------------------------
-        csv = df.to_csv(index=False).encode("utf-8")
-        st.download_button(
-            "⬇️ Download CSV",
-            csv,
-            "bmo_transactions.csv",
-            "text/csv",
-            use_container_width=True
-        )
-
-        st.success("✅ Transactions Loaded Successfully!")
+# # ======================================================================
+# # BMO API — TRANSACTION VIEWER
+# # ======================================================================
+#
+# import streamlit as st
+# import requests
+# # st.write("Loaded secrets:", st.secrets.keys())
+# import pandas as pd
+#
+# def api_transactions_ui():
+#
+#     st.title("💳 BMO API — Transaction Viewer")
+#     st.subheader("🔎 Search Account Transactions")
+#     st.markdown("---")
+#
+#     # ------------------------------------------------------------------
+#     # 1️⃣ GET BEARER TOKEN
+#     # ------------------------------------------------------------------
+#     def get_bearer_token():
+#
+#         url = "https://sandbox-open-api.bmo.com/oauth2/token"
+#
+#         data = {
+#             "grant_type": "client_credentials",
+#             "client_id": st.secrets["BMO_CLIENT_ID"],
+#             "client_secret": st.secrets["BMO_CLIENT_SECRET"]
+#         }
+#
+#         headers = {"Content-Type": "application/x-www-form-urlencoded"}
+#
+#         response = requests.post(url, data=data, headers=headers)
+#
+#         if response.status_code != 200:
+#             st.error(f"❌ Token Error: {response.text}")
+#             return None
+#
+#         return response.json().get("access_token")
+#
+#     # ------------------------------------------------------------------
+#     # 2️⃣ FETCH TRANSACTIONS FROM BMO
+#     # ------------------------------------------------------------------
+#     def get_transactions(account_id, start_time, end_time, offset=0, limit=100):
+#
+#         token = get_bearer_token()
+#         if not token:
+#             return None
+#
+#         url = (
+#             f"https://sandbox-open-api.bmo.com/open-banking/commercial-sb/accounts/"
+#             f"{account_id}/transactions"
+#             f"?startTime={start_time}&endTime={end_time}&offset={offset}&limit={limit}"
+#         )
+#
+#         headers = {
+#             "Accept": "application/json",
+#             "Content-Type": "application/json",
+#             "authorization": f"Bearer {token}",
+#             "x-api-key": st.secrets["BMO_API_KEY"],
+#             "distinct": "sybest_streamlit_v1"
+#         }
+#
+#         response = requests.get(url, headers=headers)
+#
+#         if response.status_code != 200:
+#             st.error(f"❌ API Error: {response.text}")
+#             return None
+#
+#         return response.json()
+#
+#     # ------------------------------------------------------------------
+#     # 3️⃣ USER INPUTS
+#     # ------------------------------------------------------------------
+#     account_id = st.text_input("Account ID", placeholder="Enter BMO Account ID")
+#
+#     col1, col2 = st.columns(2)
+#     start_date = col1.date_input("Start Date")
+#     end_date = col2.date_input("End Date")
+#
+#     start_ts = f"{start_date}T00:00:00Z"
+#     end_ts = f"{end_date}T23:59:59Z"
+#
+#     # ------------------------------------------------------------------
+#     # 4️⃣ FETCH BUTTON
+#     # ------------------------------------------------------------------
+#     if st.button("Fetch Transactions"):
+#
+#         if not account_id.strip():
+#             st.warning("⚠️ Please enter an Account ID.")
+#             return
+#
+#         data = get_transactions(account_id, start_ts, end_ts)
+#
+#         if not data:
+#             return
+#
+#         tx_list = data.get("transactions", [])
+#
+#         if len(tx_list) == 0:
+#             st.info("ℹ️ No transactions found for this date range.")
+#             return
+#
+#         # ------------------------------------------------------------------
+#         # 5️⃣ BUILD DATAFRAME
+#         # ------------------------------------------------------------------
+#         rows = []
+#         for tx in tx_list:
+#             d = tx["depositTransaction"]
+#             rows.append({
+#                 "Transaction ID": d["transactionId"],
+#                 "Description": d["description"],
+#                 "Amount": d["amount"],
+#                 "Debit/Credit": d["debitCreditMemo"],
+#                 "Posted Timestamp": d["postedTimestamp"],
+#                 "Reference": d["bankReferenceNumber"]
+#             })
+#
+#         df = pd.DataFrame(rows)
+#
+#         # ------------------------------------------------------------------
+#         # 6️⃣ SUMMARY METRICS
+#         # ------------------------------------------------------------------
+#         st.markdown("### 📊 Summary")
+#
+#         colA, colB, colC = st.columns(3)
+#
+#         total_credits = df[df["Debit/Credit"] == "CREDIT"]["Amount"].sum()
+#         total_debits = df[df["Debit/Credit"] == "DEBIT"]["Amount"].sum()
+#         net_flow = df["Amount"].sum()
+#
+#         colA.metric("Total Credits", f"${total_credits:,.2f}")
+#         colB.metric("Total Debits", f"${total_debits:,.2f}")
+#         colC.metric("Net Cash Flow", f"${net_flow:,.2f}")
+#
+#         # ------------------------------------------------------------------
+#         # 7️⃣ TABLE VIEW
+#         # ------------------------------------------------------------------
+#         st.markdown("### 📄 Transaction Details")
+#         st.dataframe(df, use_container_width=True)
+#
+#         # ------------------------------------------------------------------
+#         # 8️⃣ DOWNLOAD CSV
+#         # ------------------------------------------------------------------
+#         csv = df.to_csv(index=False).encode("utf-8")
+#         st.download_button(
+#             "⬇️ Download CSV",
+#             csv,
+#             "bmo_transactions.csv",
+#             "text/csv",
+#             use_container_width=True
+#         )
+#
+#         st.success("✅ Transactions Loaded Successfully!")
 
 
 
