@@ -217,3 +217,14 @@ XlsxWriter==3.2.2
 yarg==0.1.9
 yfinance==0.2.61
 zopfli==0.2.3.post1
+
+
+#================================================
+#  UPDATED
+#===============================================
+
+streamlit==1.37.0   (unless required)
+pywin32
+tk
+mysql
+mssql
