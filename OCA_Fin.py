@@ -8,32 +8,27 @@ from pathlib import Path
 st.set_page_config(page_title="OCA Attendance Dashboard", layout="wide")
 
 
-# =========================================================
-# LOGIN FUNCTION (NO SECRETS REQUIRED)
-# =========================================================
-
 import streamlit as st
 
-# -----------------------------------------
-# HARD-CODED USERS (secure enough for internal apps)
-# -----------------------------------------
+# =========================================================
+# HARD-CODED USER ACCOUNTS (NO SECRETS REQUIRED)
+# =========================================================
 USERS = {
     "admin": "password123",
     "treasurer": "finance2024",
     "secretary": "attend2024"
 }
 
-def login():
+# =========================================================
+# LOGIN PAGE
+# =========================================================
+def login_page():
     st.title("🔐 Login Required")
 
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
-    login_btn = st.button("Login")
 
-    # -------------------------
-    # LOGIN LOGIC
-    # -------------------------
-    if login_btn:
+    if st.button("Login"):
         if username in USERS and USERS[username] == password:
             st.session_state["logged_in"] = True
             st.session_state["user_role"] = username
@@ -44,38 +39,56 @@ def login():
 
 
 # =========================================================
-# MAIN DASHBOARD CONTROLLER
+# MAIN DASHBOARD
 # =========================================================
-def main():
+def main_dashboard():
+    st.sidebar.markdown(f"👤 Logged in as: **{st.session_state['user_role']}**")
 
-    st.sidebar.markdown(f"👋 Logged in as **{st.session_state['user_role']}**")
-
-    # Logout Button
+    # logout
     if st.sidebar.button("🚪 Logout"):
         st.session_state["logged_in"] = False
         st.session_state["user_role"] = None
         st.rerun()
 
-    # -------------------------------------------------
-    # PLACE YOUR DASHBOARD PAGES BELOW
-    # -------------------------------------------------
-    st.title("🏠 OCA Dashboard")
-    st.write("Welcome to the main dashboard!")
+    # NAVIGATION
+    page = st.sidebar.radio(
+        "Select a Page:",
+        ["🏠 Home", "🧾 Attendance Tracker", "💰 OCA Finance"]
+    )
+
+    # ==============================
+    # HOME PAGE
+    # ==============================
+    if page == "🏠 Home":
+        st.title("🏠 OCA Dashboard")
+        st.write("Welcome to the Owerri Cultural Association System!")
+
+    # ==============================
+    # ATTENDANCE PAGE
+    # ==============================
+    elif page == "🧾 Attendance Tracker":
+        attendance_ui()  # <-- your existing function remains
+
+    # ==============================
+    # FINANCE PAGE
+    # ==============================
+    elif page == "💰 OCA Finance":
+        financial_ui()  # <-- your existing function remains
 
 
 # =========================================================
-# LOGIN MASTER CONTROLLER
+# LOGIN CONTROLLER
 # =========================================================
 if "logged_in" not in st.session_state:
     st.session_state["logged_in"] = False
     st.session_state["user_role"] = None
 
 if not st.session_state["logged_in"]:
-    login()
-    st.stop()  # ⛔ stop here until logged in
+    login_page()
+    st.stop()
 
-# If logged in → show dashboard
-main()
+main_dashboard()
+
 
 
 # =========================== LOGIN ENDS HERE ===================
