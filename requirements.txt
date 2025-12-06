@@ -223,15 +223,23 @@ zopfli==0.2.3.post1
 #  UPDATED
 #===============================================
 
-streamlit
+
 pywin32
 tk
 mysql
 mssql
 pandas
-requests
+
 python-dateutil
 python-pptx
-matplotlib
+
 sqlalchemy
+
+streamlit
+pandas
+requests
+matplotlib
+python-pptx
+sqlalchemy
+python-dateutil
 
