@@ -1189,13 +1189,13 @@ def attendance_ui():
    with col1:
         from pathlib import Path
 
-        BASE_DIR = Path(__file__).resolve().parent
-        logo_path = BASE_DIR / "assets" / "oca_logo.jpg"
+        #BASE_DIR = Path(__file__).resolve().parent
+        #logo_path = BASE_DIR / "assets" / "oca_logo.jpg"
 
-        if logo_path.exists():
-            st.image(str(logo_path), width=120)
-        else:
-            st.warning(f"Logo not found at: {logo_path}")
+        #if logo_path.exists():
+            #st.image(str(logo_path), width=120)
+        #else:
+           # st.warning(f"Logo not found at: {logo_path}")
 
 
 
@@ -4932,4 +4932,5 @@ def analyze_membership_debt():
 # =========================================
 
 # 
+
 
