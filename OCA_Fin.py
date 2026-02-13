@@ -1187,8 +1187,23 @@ def attendance_ui():
     col1, col2 = st.columns([1, 5])
 
     with col1:
-        logo_path = r"C:/Users/stans/OneDrive/Desktop/OCA/OCA LOGO/OCA LOGO.JPG"
-        st.image(logo_path, width=120)
+        #logo_path = r"C:/Users/stans/OneDrive/Desktop/OCA/OCA LOGO/OCA LOGO.JPG"
+        #st.image(logo_path, width=120)
+
+        import os
+
+        BASE_DIR = os.path.dirname(__file__)
+        logo_path = os.path.join(BASE_DIR, "assets", "oca_logo.jpg")
+        
+        st.image(logo_path)
+
+
+
+        # ======================= ONLINE IMAGE ENDS HERE
+
+
+
+        
 
     with col2:
         st.title("🧾 OCA Attendance & Analytics Dashboard")
@@ -4915,4 +4930,5 @@ def analyze_membership_debt():
 
 
 # =========================================
+
 # 
