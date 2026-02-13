@@ -16,8 +16,7 @@ import streamlit as st
 USERS = {
     "admin": "password123",
     "treasurer": "finance2024",
-    "secretary": "attend2024",
-    "oca": "oca2026"
+    "secretary": "attend2024"
 }
 
 # =========================================================
@@ -52,10 +51,7 @@ def main_dashboard():
         st.rerun()
 
     # NAVIGATION
-    page = st.sidebar.radio(
-        "Select a Page:",
-        ["🏠 Home", "🧾 Attendance Tracker", "💰 OCA Finance"]
-    )
+    page = st.sidebar.write("Welcome to OCA System")
 
     # ==============================
     # HOME PAGE
@@ -227,16 +223,198 @@ def main():
     # --------------------------------------------------------------------
     # HOME PAGE
     # --------------------------------------------------------------------
-    if page_selection == "🏠 Home":
-        st.title("🏠 OCA Dashboard")
-        st.markdown("""
-        Welcome to the **Owerri Cultural Association Dashboard**  
+    # if page_selection == "🏠 Home":
+    #     st.title("🏠 OCA Dashboard")
+    #     st.markdown("""
+    #     Welcome to the **Owerri Cultural Association Dashboard**
+    #
+    #     Navigate using the sidebar to access:
+    #     - 🧾 Attendance Tracker
+    #     - 🧾 OCA Financial System
+    #     - 🔐 Account API
+    #     """)
 
-        Navigate using the sidebar to access:
-        - 🧾 Attendance Tracker  
-        - 🧾 OCA Financial System
-        - 🔐 Account API    
-        """)
+    # ====================================================================== FRONT PAGE LAYOUT
+
+    # import streamlit as st
+
+    # --------------------------------------------------------------------
+    # HOME PAGE (OCA NorCal style landing)
+    # --------------------------------------------------------------------
+    if page_selection == "🏠 Home":
+        st.markdown("""
+        <style>
+          .hero-wrap{
+            border-radius: 18px;
+            padding: 28px;
+            border: 1px solid rgba(255,255,255,0.12);
+            background: linear-gradient(135deg, rgba(16,185,129,0.18), rgba(59,130,246,0.18));
+            margin-bottom: 16px;
+          }
+          .hero-kicker{
+            display:inline-block;
+            font-size: 0.85rem;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.12);
+            margin-bottom: 10px;
+          }
+          .hero-title{
+            margin: 0;
+            line-height: 1.1;
+            font-size: 2.1rem;
+            font-weight: 800;
+          }
+          .hero-sub{
+            margin-top: 10px;
+            opacity: 0.9;
+            font-size: 1.05rem;
+          }
+          .section-title{
+            margin: 10px 0 8px 0;
+            font-weight: 800;
+            font-size: 1.1rem;
+          }
+          .card{
+            border-radius: 16px;
+            padding: 16px;
+            border: 1px solid rgba(255,255,255,0.12);
+            background: rgba(255,255,255,0.03);
+            height: 100%;
+          }
+          .muted{opacity:0.85;}
+          .divider{margin:16px 0; opacity:0.25;}
+          .tag{
+            display:inline-block;
+            padding: 5px 10px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.10);
+            font-size: 0.85rem;
+            margin-right: 8px;
+            margin-top: 6px;
+          }
+        </style>
+        """, unsafe_allow_html=True)
+
+        # HERO
+        st.markdown("""
+        <div class="hero-wrap">
+          <div class="hero-kicker">Owerri Cultural Association • Northern California</div>
+          <div class="hero-title">Heritage. Unity. Strength.</div>
+          <div class="hero-sub">
+            OCA is a community of Owerri indigenes and families in Northern California—preserving culture,
+            supporting one another, and building progress across generations.
+          </div>
+          <div style="margin-top:10px;">
+            <span class="tag">Monthly Meetings</span>
+            <span class="tag">Community Outreach</span>
+            <span class="tag">Member Support</span>
+            <span class="tag">Events & Celebrations</span>
+          </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        # PRIMARY CTA ROW
+        c1, c2, c3 = st.columns([1.2, 1.2, 1])
+        with c1:
+            st.markdown('<div class="card"><div class="section-title">About OCA</div>'
+                        '<div class="muted">We preserve Owerri traditions and promote unity, peace, and community development—'
+                        'through meetings, events, and outreach.</div></div>', unsafe_allow_html=True)
+        with c2:
+            st.markdown('<div class="card"><div class="section-title">Our Automated System</div>'
+                        '<div class="muted">This dashboard modernizes how we run OCA—attendance tracking, financial records, '
+                        'member reporting, and secure admin tools—so leadership can operate faster, with clean records and transparency.</div></div>',
+                        unsafe_allow_html=True)
+        with c3:
+            st.markdown('<div class="card"><div class="section-title">Quick Actions</div>'
+                        '<div class="muted">Jump into the tools below.</div></div>', unsafe_allow_html=True)
+            st.button("🧾 Attendance Tracker", use_container_width=True)
+            st.button("💳 Financial System", use_container_width=True)
+            st.button("🔐 Account / Admin API", use_container_width=True)
+
+        st.markdown('<hr class="divider">', unsafe_allow_html=True)
+
+        # PROGRAMS (like site sections)
+        st.markdown('<div class="section-title">Our Programs</div>', unsafe_allow_html=True)
+        p1, p2, p3 = st.columns(3)
+        with p1:
+            st.markdown("""
+            <div class="card">
+              <div class="section-title">🤝 Community Outreach</div>
+              <div class="muted">Volunteer support, cultural impact, and assistance when members and families need it most.</div>
+            </div>
+            """, unsafe_allow_html=True)
+        with p2:
+            st.markdown("""
+            <div class="card">
+              <div class="section-title">🛡️ Member Support</div>
+              <div class="muted">Structured support tied to participation and good standing—designed to keep our community strong.</div>
+            </div>
+            """, unsafe_allow_html=True)
+        with p3:
+            st.markdown("""
+            <div class="card">
+              <div class="section-title">🎉 Events & Culture</div>
+              <div class="muted">Monthly meetings (Feb–Nov), annual celebrations, and gatherings that preserve identity and unity.</div>
+            </div>
+            """, unsafe_allow_html=True)
+
+        st.markdown('<hr class="divider">', unsafe_allow_html=True)
+
+        # UPCOMING / HIGHLIGHTS
+        left, right = st.columns([1.3, 1])
+        with left:
+            st.markdown('<div class="section-title">Upcoming Events</div>', unsafe_allow_html=True)
+            st.info(
+                "Stay connected through meetings and community events. "
+                "Use the Attendance module to confirm participation and view meeting history.",
+                icon="📌"
+            )
+            with st.expander("Examples of what you can list here"):
+                st.write("- Monthly Meeting (1st Sunday @ 6:00 PM)")
+                st.write("- Annual OCA Events")
+                st.write("- Community visits / outreach activities")
+
+        with right:
+            st.markdown('<div class="section-title">At a Glance</div>', unsafe_allow_html=True)
+            m1, m2 = st.columns(2)
+            with m1:
+                st.metric("Years Active", "27+")
+                st.metric("Members", "100+")
+            with m2:
+                st.metric("Villages Represented", "15+")
+                st.metric("Doctorate Members", "5+")
+            st.caption("Replace these with live metrics when your database is connected.")
+
+        st.markdown('<hr class="divider">', unsafe_allow_html=True)
+
+        # FOOTER
+        st.markdown("""
+        <div class="muted" style="padding: 6px 2px;">
+          <b>OCA Dashboard</b> • Attendance • Finance • Secure Admin Tools<br/>
+          Built to support transparency, continuity, and strong community operations.
+        </div>
+        """, unsafe_allow_html=True)
+
+
+
+
+
+
+
+
+
+
+
+    # ///////////////////////////////////////////////////////////  ENDS HERE
+
+
+
+
+
+
 
     # --------------------------------------------------------------------
     # ATTENDANCE TRACKER PAGE
@@ -4735,3 +4913,6 @@ def analyze_membership_debt():
 # if __name__ == "__main__":
 #     main()
 
+
+# =========================================
+# 
