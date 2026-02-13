@@ -234,17 +234,21 @@ python-pptx
 
 sqlalchemy
 
-matplotlib
+matplotlib==3.10.3
 python-pptx
 sqlalchemy
 python-dateutil
 
 
-streamlit==1.31.0
-pandas
-matplotlib
-requests
-python-docx
-openpyxl
+#streamlit==1.42.0
+pandas==2.3.0
+#matplotlib
+#requests
+python-docx==1.0.2
+openpyxl==3.1.5
+numpy==2.3.1
+plotly==6.1.1
+beautifulsoup4==4.13.3
+lxml==6.0.2
 
 
