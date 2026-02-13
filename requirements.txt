@@ -5,7 +5,7 @@ matplotlib==3.10.3
 openpyxl==3.1.5
 python-pptx==1.0.2
 requests==2.32.3
-python-3.11.8
+
 
 
 
