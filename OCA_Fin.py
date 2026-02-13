@@ -1186,16 +1186,16 @@ def attendance_ui():
 
     col1, col2 = st.columns([1, 5])
 
-    with col1:
-        #logo_path = r"C:/Users/stans/OneDrive/Desktop/OCA/OCA LOGO/OCA LOGO.JPG"
-        #st.image(logo_path, width=120)
+   with col1:
+        from pathlib import Path
 
-        import os
+        BASE_DIR = Path(__file__).resolve().parent
+        logo_path = BASE_DIR / "assets" / "oca_logo.jpg"
 
-        BASE_DIR = os.path.dirname(__file__)
-        logo_path = os.path.join(BASE_DIR, "assets", "oca_logo.jpg")
-        
-        st.image(logo_path)
+        if logo_path.exists():
+            st.image(str(logo_path), width=120)
+        else:
+            st.warning(f"Logo not found at: {logo_path}")
 
 
 
@@ -4932,3 +4932,4 @@ def analyze_membership_debt():
 # =========================================
 
 # 
+
