@@ -1186,8 +1186,9 @@ def attendance_ui():
 
     col1, col2 = st.columns([1, 5])
 
-   with col1:
-        from pathlib import Path
+    with col1:
+        #from pathlib import Path
+        st.write("OCA SYSTEMS")
 
         #BASE_DIR = Path(__file__).resolve().parent
         #logo_path = BASE_DIR / "assets" / "oca_logo.jpg"
@@ -4932,5 +4933,6 @@ def analyze_membership_debt():
 # =========================================
 
 # 
+
 
 
