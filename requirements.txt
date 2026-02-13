@@ -9,7 +9,7 @@ asgiref==3.8.1
 asttokens==3.0.0
 astunparse==1.6.3
 attrs==25.1.0
-av==14.4.0
+#av==14.4.0
 backcall==0.2.0
 beautifulsoup4==4.13.3
 bleach==6.2.0
@@ -251,6 +251,7 @@ plotly==6.1.1
 beautifulsoup4==4.13.3
 lxml==6.0.2
 python-3.11
+
 
 
 
