@@ -3460,10 +3460,10 @@ def financial_ui():
 
         
 
-        logo_path = r"C:\Users\stans\OneDrive\Desktop\OCA\01 -STANLEY'S ADMINISTRATION - PRESIDENT\OCA NEW LOGO\OCA - FNEW ACE LOGO.png"
+        # logo_path = r"C:\Users\stans\OneDrive\Desktop\OCA\01 -STANLEY'S ADMINISTRATION - PRESIDENT\OCA NEW LOGO\OCA - FNEW ACE LOGO.png"
 
-        if os.path.exists(logo_path):
-            slide.shapes.add_picture(logo_path, Inches(3.5), Inches(0.3), width=Inches(2))
+        # if os.path.exists(logo_path):
+        #     slide.shapes.add_picture(logo_path, Inches(3.5), Inches(0.3), width=Inches(2))
 
         org_box = slide.shapes.add_textbox(Inches(1), Inches(1.5), Inches(8), Inches(1))
         tf = org_box.text_frame
