@@ -3434,7 +3434,12 @@ def financial_ui():
         # ===================================================================================
         slide = prs.slides.add_slide(prs.slide_layouts[6])
 
-        logo_path = r"C:\Users\stans\OneDrive\Desktop\OCA\01 -STANLEY'S ADMINISTRATION - PRESIDENT\OCA NEW LOGO\OCA - FNEW ACE LOGO.png"
+        import os
+
+        BASE_DIR = os.path.dirname(__file__)
+        logo_path = os.path.join(BASE_DIR, "assets", "FNEW_ACE_LOGO.png")     # NEW LOGO UPDATE 4/10/2026
+
+        #logo_path = r"C:\Users\stans\OneDrive\Desktop\OCA\01 -STANLEY'S ADMINISTRATION - PRESIDENT\OCA NEW LOGO\OCA - FNEW ACE LOGO.png"
 
         if os.path.exists(logo_path):
             slide.shapes.add_picture(logo_path, Inches(3.5), Inches(0.3), width=Inches(2))
