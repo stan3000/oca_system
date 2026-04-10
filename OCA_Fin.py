@@ -73,6 +73,13 @@ def main_dashboard():
         financial_ui()  # <-- your existing function remains
 
 
+    # ==============================
+    # OCA DUES
+    # ==============================
+
+    elif page == "OCA Dues Analysis":
+        oca_dues_ui()
+
 # =========================================================
 # LOGIN CONTROLLER
 # =========================================================
@@ -164,7 +171,7 @@ def main():
 
     page_selection = st.sidebar.radio(
         "Select a Page:",
-        ["🏠 Home", "🧾 Attendance Tracker", "🧾 OCA Finance"],
+        ["🏠 Home", "🧾 Attendance Tracker", "🧾 OCA Finance","ACCOUNT API"],
         index=0
     )
 
@@ -877,7 +884,7 @@ DEFAULT_ROSTER = [
     "Ihejeto Anthony (Mr.)",
     "Iwu Loretta (Ms.)",
     "Iwuagwu Johnny (Mr. & Mrs.)",
-    "Mbara Tom (Mr. & Mrs.)",
+    "Mbara Thomas (Mr. & Mrs.)",
     "Njoku Stanley & Amaka (Dr. and Mrs)",
     "Nwadibia Joannes Ubanwa (Ms.)",
     "Nwadike Constance (Ms.)",
@@ -1187,24 +1194,8 @@ def attendance_ui():
     col1, col2 = st.columns([1, 5])
 
     with col1:
-        #from pathlib import Path
-        st.write("OCA SYSTEMS")
-
-        #BASE_DIR = Path(__file__).resolve().parent
-        #logo_path = BASE_DIR / "assets" / "oca_logo.jpg"
-
-        #if logo_path.exists():
-            #st.image(str(logo_path), width=120)
-        #else:
-           # st.warning(f"Logo not found at: {logo_path}")
-
-
-
-        # ======================= ONLINE IMAGE ENDS HERE
-
-
-
-        
+        logo_path = r"C:/Users/stans/OneDrive/Desktop/OCA/OCA LOGO/OCA LOGO.JPG"
+        st.image(logo_path, width=120)
 
     with col2:
         st.title("🧾 OCA Attendance & Analytics Dashboard")
@@ -2407,498 +2398,21 @@ def attendance_ui():
 
 
 
-
-
-
-
-
-# ===========================================
-# #   # 🧾 OCA FINANCIAL
-# # ======================
-# #   # 🧾 OCA FINANCIAL
-# # ======================================================================================================================================================
 #
+# # =================================================================================== PART 33
+#
+# #
 # def financial_ui():
 #     import matplotlib.pyplot as plt
 #     import matplotlib.ticker as mtick
-#     st.markdown(
-#         """
-#         <style>
-#             /* Dashboard Cards */
-#             .cards {
-#                 display: flex;
-#                 flex-wrap: wrap;
-#                 gap: 18px;
-#                 margin: 15px 0 25px 0;
-#             }
-#             .card {
-#                 flex: 1 1 240px;
-#                 background: linear-gradient(135deg, #f7f8fa, #eef2f7);
-#                 border-radius: 14px;
-#                 padding: 16px 18px;
-#                 box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-#                 border: 1px solid #e4e6eb;
-#             }
-#             .label {
-#                 font-size: 13px;
-#                 color: #555;
-#                 text-transform: uppercase;
-#                 letter-spacing: .5px;
-#             }
-#             .value {
-#                 font-size: 28px;
-#                 font-weight: 700;
-#                 color: #222;
-#                 margin-top: 5px;
-#             }
-#         </style>
-#         """,
-#         unsafe_allow_html=True
-#     )
-#
-#     st.title("💰 OCA Financial Data Analyzer")
-#
-#     st.markdown("""
-#     Upload your **financial CSV file** (e.g., BMO bank statement) below.
-#     The system extracts *Posted Date, Description, Type, Credit/Debit, and Amount*
-#     and generates smart monthly summaries, annotated charts, and key highlights.
-#     """)
-#
-#     uploaded_file = st.file_uploader("📂 Upload Financial CSV", type=["csv"])
-#
-#     if uploaded_file is not None:
-#         try:
-#             df = pd.read_csv(uploaded_file)
-#         except UnicodeDecodeError:
-#             df = pd.read_csv(uploaded_file, encoding="ISO-8859-1")
-#
-#         # Normalize columns
-#         df.columns = df.columns.str.strip().str.upper()
-#         if 'POSTED DATE' not in df.columns:
-#             st.error("❌ Missing 'POSTED DATE' column in file.")
-#             return
-#         df['POSTED DATE'] = pd.to_datetime(df['POSTED DATE'], errors='coerce')
-#         df['CREDIT/DEBIT'] = df['CREDIT/DEBIT'].astype(str).str.strip().str.title()
-#         df['MONTH'] = df['POSTED DATE'].dt.to_period('M')
-#
-#         # Monthly summary
-#         monthly_summary = df.groupby(['MONTH', 'CREDIT/DEBIT']).agg({'AMOUNT': 'sum'}).reset_index()
-#         monthly_pivot = monthly_summary.pivot(index='MONTH', columns='CREDIT/DEBIT', values='AMOUNT').fillna(0)
-#         monthly_pivot['NET FLOW'] = monthly_pivot.get('Credit', 0) - monthly_pivot.get('Debit', 0)
-#
-#         # Top Description/Type
-#         top_desc_type = (
-#             df.groupby('MONTH')
-#             .agg({
-#                 'DESCRIPTION': lambda x: x.value_counts().index[0],
-#                 'TYPE': lambda x: x.value_counts().index[0]
-#             })
-#         )
-#         final_summary = monthly_pivot.join(top_desc_type).reset_index()
-#         # final_summary['MONTH'] = final_summary['MONTH'].astype(str)
-#
-#         final_summary['MONTH'] = (
-#             pd.to_datetime(final_summary['MONTH'].astype(str)).dt.strftime('%b-%y')
-#         )
-#
-#         # ======== DASHBOARD CARDS ========
-#         total_credit = final_summary['Credit'].sum() if 'Credit' in final_summary else 0
-#         total_debit = final_summary['Debit'].sum() if 'Debit' in final_summary else 0
-#         net_balance = total_credit - total_debit
-#         avg_monthly_credit = final_summary['Credit'].mean() if 'Credit' in final_summary else 0
-#
-#         st.markdown(
-#             f"""
-#             <div class="cards">
-#                 <div class="card"><div class="label">Total Credit</div><div class="value">${total_credit:,.2f}</div></div>
-#                 <div class="card"><div class="label">Total Debit</div><div class="value">${total_debit:,.2f}</div></div>
-#                 <div class="card"><div class="label">Net Balance</div><div class="value">${net_balance:,.2f}</div></div>
-#                 <div class="card"><div class="label">Avg. Monthly Credit</div><div class="value">${avg_monthly_credit:,.2f}</div></div>
-#             </div>
-#             """,
-#             unsafe_allow_html=True
-#         )
-#
-#         st.subheader("📅 Monthly Credit & Debit Summary")
-#         st.dataframe(final_summary, use_container_width=True, hide_index=True)
-#
-#         # ======== ANNOTATED VISUALS ========
-#         st.divider()
-#         st.subheader("📈 Annotated Visual Trends")
-#
-#         # Line chart for monthly totals (annotated)
-#         st.markdown("**Total Credit vs Debit (per Month)**")
-#         fig, ax = plt.subplots(figsize=(8, 4))
-#         months = final_summary['MONTH']
-#         if 'Credit' in final_summary:
-#             ax.plot(months, final_summary['Credit'], marker='o', label='Credit', color='green')
-#             for i, val in enumerate(final_summary['Credit']):
-#                 ax.annotate(f"${val:,.0f}", (i, val), textcoords="offset points", xytext=(0, 8), ha='center', fontsize=8)
-#         if 'Debit' in final_summary:
-#             ax.plot(months, final_summary['Debit'], marker='o', label='Debit', color='red')
-#             for i, val in enumerate(final_summary['Debit']):
-#                 ax.annotate(f"${val:,.0f}", (i, val), textcoords="offset points", xytext=(0, -12), ha='center', fontsize=8)
-#         ax.set_title("Monthly Totals")
-#         ax.set_ylabel("Amount ($)")
-#         ax.legend()
-#         ax.yaxis.set_major_formatter(mtick.StrMethodFormatter("${x:,.0f}"))
-#         st.pyplot(fig)
-#
-#         # Net Flow Bar Chart (annotated)
-#         st.markdown("**Net Flow (Credits - Debits)**")
-#         fig, ax = plt.subplots(figsize=(8, 4))
-#         bars = ax.bar(final_summary['MONTH'], final_summary['NET FLOW'], color='#0078d4')
-#         ax.set_title("Net Flow per Month")
-#         ax.set_ylabel("Net ($)")
-#         ax.yaxis.set_major_formatter(mtick.StrMethodFormatter("${x:,.0f}"))
-#         for bar in bars:
-#             height = bar.get_height()
-#             ax.annotate(f"${height:,.0f}", xy=(bar.get_x() + bar.get_width() / 2, height),
-#                         xytext=(0, 5), textcoords="offset points", ha='center', va='bottom', fontsize=8)
-#         st.pyplot(fig)
-#         st.divider()
-#
-#
-#         # ======== MONTHLY BALANCE GRAPH ========
-#         st.markdown("**💹 Monthly Balance (Credit - Debit)**")
-#
-#         # Compute balance column if not already there
-#         if 'Credit' in final_summary and 'Debit' in final_summary:
-#             final_summary['BALANCE'] = final_summary['Credit'] - final_summary['Debit']
-#         else:
-#             final_summary['BALANCE'] = 0
-#
-#         fig, ax = plt.subplots(figsize=(9, 4))
-#         ax.plot(final_summary['MONTH'], final_summary['BALANCE'],
-#                 marker='o', color='#ff7f0e', linewidth=2.5, label='Monthly Balance')
-#
-#         # Highlight positive vs negative months
-#         for i, val in enumerate(final_summary['BALANCE']):
-#             color = 'green' if val >= 0 else 'red'
-#             ax.annotate(f"${val:,.0f}",
-#                         (i, val),
-#                         textcoords="offset points",
-#                         xytext=(0, 6),
-#                         ha='center',
-#                         fontsize=9,
-#                         fontweight='bold',
-#                         color=color)
-#
-#         # Draw zero line for context
-#         ax.axhline(0, color='gray', linestyle='--', linewidth=1)
-#
-#         ax.set_title("Monthly Balance (Credit - Debit)", fontsize=12, weight='bold')
-#         ax.set_ylabel("Balance ($)")
-#         ax.yaxis.set_major_formatter(mtick.StrMethodFormatter("${x:,.0f}"))
-#         ax.legend()
-#         st.pyplot(fig)
-#
-#
-#         # =============== ENDS HERE
-#
-#
-#         # Pie chart of Credit by Type (annotated)
-#         st.markdown("**Credit Distribution by Type**")
-#         credit_by_type = (
-#             df[df["CREDIT/DEBIT"] == "Credit"]
-#             .groupby("TYPE")["AMOUNT"]
-#             .sum()
-#             .sort_values(ascending=False)
-#         )
-#         fig, ax = plt.subplots(figsize=(5, 5))
-#         wedges, texts, autotexts = ax.pie(
-#             credit_by_type,
-#             autopct=lambda p: f"{p:.1f}%\n(${p*sum(credit_by_type)/100:,.0f})",
-#             startangle=90,
-#             textprops={'fontsize': 8}
-#         )
-#         ax.set_title("Credit Breakdown by Type")
-#         ax.legend(credit_by_type.index, loc="center left", bbox_to_anchor=(1, 0.5))
-#         st.pyplot(fig)
-#
-#      # =================================================================== NEW GRAPH
-#
-#         # ==========================================================
-#         # 🔻 TOP 10 MONTHS BY TOTAL DEBIT SPENDING
-#         # ==========================================================
-#         st.divider()
-#         st.subheader("🔻 Top 10 Months by Total Debit Spending")
-#
-#         # Group by Month for total Debit
-#         df['POSTED DATE'] = pd.to_datetime(df['POSTED DATE'], errors='coerce')
-#         df['MONTH'] = df['POSTED DATE'].dt.to_period('M')
-#         df_debit_monthly = (
-#             df[df['CREDIT/DEBIT'].str.lower() == 'debit']
-#             .groupby('MONTH')['AMOUNT']
-#             .sum()
-#             .reset_index()
-#         )
-#
-#         if not df_debit_monthly.empty:
-#             # Convert Period to datetime for formatting
-#             df_debit_monthly['MONTH_LABEL'] = pd.to_datetime(df_debit_monthly['MONTH'].astype(str)).dt.strftime('%b-%y')
-#             # Top 10 months by total debit
-#             top10_debit_months = df_debit_monthly.nlargest(5, 'AMOUNT').sort_values('AMOUNT', ascending=False)
-#
-#             # Display table
-#             st.dataframe(top10_debit_months[['MONTH_LABEL', 'AMOUNT']], use_container_width=True, hide_index=True)
-#
-#             # Plot bar chart
-#             fig, ax = plt.subplots(figsize=(9, 4))
-#             bars = ax.bar(top10_debit_months['MONTH_LABEL'], top10_debit_months['AMOUNT'], color='red')
-#             ax.set_title("Top 10 Months by Debit Spending", fontsize=12, weight='bold')
-#             ax.set_xlabel("Month")
-#             ax.set_ylabel("Total Debit ($)")
-#             ax.yaxis.set_major_formatter(mtick.StrMethodFormatter("${x:,.0f}"))
-#
-#             # Annotate each bar with value
-#             for bar in bars:
-#                 height = bar.get_height()
-#                 ax.annotate(f"${height:,.0f}",
-#                             xy=(bar.get_x() + bar.get_width() / 2, height),
-#                             xytext=(0, 5),
-#                             textcoords="offset points",
-#                             ha='center',
-#                             fontsize=9,
-#                             color='black',
-#                             fontweight='bold')
-#             st.pyplot(fig)
-#         else:
-#             st.info("No debit transactions found to summarize.")
-#
-#         # ==========================================================
-#         # 💳 TOP 10 MONTHS BY TOTAL CREDIT INCOME
-#         # ==========================================================
-#         st.divider()
-#         st.subheader("💳 Top 10 Months by Total Credit Income")
-#
-#         df_credit_monthly = (
-#             df[df['CREDIT/DEBIT'].str.lower() == 'credit']
-#             .groupby('MONTH')['AMOUNT']
-#             .sum()
-#             .reset_index()
-#         )
-#
-#         if not df_credit_monthly.empty:
-#             df_credit_monthly['MONTH_LABEL'] = pd.to_datetime(df_credit_monthly['MONTH'].astype(str)).dt.strftime('%b-%y')
-#             top10_credit_months = df_credit_monthly.nlargest(5, 'AMOUNT').sort_values('AMOUNT', ascending=False)
-#
-#             st.dataframe(top10_credit_months[['MONTH_LABEL', 'AMOUNT']], use_container_width=True, hide_index=True)
-#
-#             fig, ax = plt.subplots(figsize=(9, 4))
-#             bars = ax.bar(top10_credit_months['MONTH_LABEL'], top10_credit_months['AMOUNT'], color='green')
-#             ax.set_title("Top 10 Months by Credit Income", fontsize=12, weight='bold')
-#             ax.set_xlabel("Month")
-#             ax.set_ylabel("Total Credit ($)")
-#             ax.yaxis.set_major_formatter(mtick.StrMethodFormatter("${x:,.0f}"))
-#
-#             # Annotate each bar with value
-#             for bar in bars:
-#                 height = bar.get_height()
-#                 ax.annotate(f"${height:,.0f}",
-#                             xy=(bar.get_x() + bar.get_width() / 2, height),
-#                             xytext=(0, 5),
-#                             textcoords="offset points",
-#                             ha='center',
-#                             fontsize=9,
-#                             color='black',
-#                             fontweight='bold')
-#             st.pyplot(fig)
-#         else:
-#             st.info("No credit transactions found to summarize.")
-#
-#
-#
-#
-#
-# # =============================================================== ENDS HERE
-#         # Raw table search
-#         with st.expander("🔍 Detailed Transaction Log"):
-#             search_term = st.text_input("Filter by Description or Type:")
-#             filtered_df = df.copy()
-#             if search_term:
-#                 filtered_df = filtered_df[
-#                     filtered_df['DESCRIPTION'].str.contains(search_term, case=False, na=False) |
-#                     filtered_df['TYPE'].str.contains(search_term, case=False, na=False)
-#                 ]
-#             st.dataframe(filtered_df, use_container_width=True, hide_index=True)
-#
-#             # ========================== POWER POINT PRESENTATION ==============================
-#
-#             # ==========================================================
-#             # 📊 EXPORT POWERPOINT REPORT
-#             # ==========================================================
-#             from pptx import Presentation
-#             from pptx.util import Inches, Pt
-#             from pptx.enum.text import PP_ALIGN
-#             import io
-#             from datetime import datetime
-#
-#             st.divider()
-#             st.subheader("📤 Export PowerPoint Report")
-#
-#             # Button to export report
-#             if st.button("📥 Download OCA Financial Report (PPT)"):
-#                 # Create PowerPoint presentation
-#                 prs = Presentation()
-#
-#                 # ---- Cover Slide ----
-#                 slide_title = f"OCA Financial Report — {datetime.now().strftime('%B %Y')}"
-#                 slide = prs.slides.add_slide(prs.slide_layouts[5])
-#                 title_box = slide.shapes.add_textbox(Inches(1), Inches(2), Inches(8), Inches(1.5))
-#                 tf = title_box.text_frame
-#                 p = tf.add_paragraph()
-#                 p.text = slide_title
-#                 p.font.size = Pt(36)
-#                 p.font.bold = True
-#                 p.alignment = PP_ALIGN.CENTER
-#
-#                 # ---- Summary Table Slide ----
-#                 slide = prs.slides.add_slide(prs.slide_layouts[5])
-#                 title = slide.shapes.add_textbox(Inches(1), Inches(0.5), Inches(8), Inches(1))
-#                 title.text = "Financial Summary"
-#                 tf = title.text_frame
-#                 tf.paragraphs[0].font.size = Pt(24)
-#                 tf.paragraphs[0].font.bold = True
-#
-#                 # Add table (4 summary cards)
-#                 rows, cols = 4, 2
-#                 left, top, width, height = Inches(1), Inches(1.5), Inches(8), Inches(2)
-#                 table = slide.shapes.add_table(rows, cols, left, top, width, height).table
-#                 table.columns[0].width = Inches(4)
-#                 table.columns[1].width = Inches(4)
-#
-#                 data = [
-#                     ("Total Credit", f"${total_credit:,.2f}"),
-#                     ("Total Debit", f"${total_debit:,.2f}"),
-#                     ("Net Balance", f"${net_balance:,.2f}"),
-#                     ("Avg Monthly Credit", f"${avg_monthly_credit:,.2f}")
-#                 ]
-#
-#                 for i, (label, value) in enumerate(data):
-#                     table.cell(i, 0).text = label
-#                     table.cell(i, 1).text = value
-#                     for j in range(2):
-#                         cell = table.cell(i, j)
-#                         cell.text_frame.paragraphs[0].font.size = Pt(14)
-#                         cell.text_frame.paragraphs[0].font.bold = (j == 0)
-#
-#                 # ---- Graph Slides ----
-#                 # Define helper to add figure to slide
-#                 def add_figure_slide(prs, title, fig):
-#                     buf = io.BytesIO()
-#                     fig.savefig(buf, format='png', bbox_inches='tight', dpi=200)
-#                     buf.seek(0)
-#                     slide = prs.slides.add_slide(prs.slide_layouts[5])
-#                     slide.shapes.add_textbox(Inches(1), Inches(0.3), Inches(8), Inches(1)).text = title
-#                     slide.shapes.add_picture(buf, Inches(0.5), Inches(1.2), width=Inches(9))
-#                     buf.close()
-#
-#                 # Add each matplotlib figure created above
-#                 try:
-#                     add_figure_slide(prs, "Monthly Credit vs Debit", fig)
-#                 except Exception:
-#                     pass
-#
-#                 # Recreate key charts for export consistency
-#                 # 1. Net Flow Chart
-#                 fig_nf, ax_nf = plt.subplots(figsize=(8, 4))
-#                 bars = ax_nf.bar(final_summary['MONTH'], final_summary['NET FLOW'], color='#0078d4')
-#                 ax_nf.set_title("Net Flow per Month")
-#                 ax_nf.set_ylabel("Net ($)")
-#                 ax_nf.yaxis.set_major_formatter(mtick.StrMethodFormatter("${x:,.0f}"))
-#                 for bar in bars:
-#                     height = bar.get_height()
-#                     ax_nf.annotate(f"${height:,.0f}", xy=(bar.get_x() + bar.get_width() / 2, height),
-#                                    xytext=(0, 5), textcoords="offset points", ha='center', va='bottom', fontsize=8)
-#                 add_figure_slide(prs, "Net Flow (Credits - Debits)", fig_nf)
-#
-#                 # 2. Monthly Balance
-#                 fig_bal, ax_bal = plt.subplots(figsize=(8, 4))
-#                 ax_bal.plot(final_summary['MONTH'], final_summary['BALANCE'], marker='o', color='#ff7f0e')
-#                 for i, val in enumerate(final_summary['BALANCE']):
-#                     color = 'green' if val >= 0 else 'red'
-#                     ax_bal.annotate(f"${val:,.0f}", (i, val), textcoords="offset points",
-#                                     xytext=(0, 6), ha='center', fontsize=8, color=color)
-#                 ax_bal.axhline(0, color='gray', linestyle='--', linewidth=1)
-#                 ax_bal.set_title("Monthly Balance (Credit - Debit)")
-#                 ax_bal.set_ylabel("Balance ($)")
-#                 add_figure_slide(prs, "Monthly Balance Trend", fig_bal)
-#
-#                 # 3. Top Debit and Credit Charts
-#                 if not df_debit_monthly.empty:
-#                     fig_d, ax_d = plt.subplots(figsize=(8, 4))
-#                     bars = ax_d.bar(top10_debit_months['MONTH_LABEL'], top10_debit_months['AMOUNT'], color='red')
-#                     ax_d.set_title("Top 10 Months by Debit Spending")
-#                     for bar in bars:
-#                         height = bar.get_height()
-#                         ax_d.annotate(f"${height:,.0f}", xy=(bar.get_x() + bar.get_width() / 2, height),
-#                                       xytext=(0, 5), textcoords="offset points", ha='center', fontsize=8)
-#                     add_figure_slide(prs, "Top 10 Debit Months", fig_d)
-#
-#                 if not df_credit_monthly.empty:
-#                     fig_c, ax_c = plt.subplots(figsize=(8, 4))
-#                     bars = ax_c.bar(top10_credit_months['MONTH_LABEL'], top10_credit_months['AMOUNT'], color='green')
-#                     ax_c.set_title("Top 10 Months by Credit Income")
-#                     for bar in bars:
-#                         height = bar.get_height()
-#                         ax_c.annotate(f"${height:,.0f}", xy=(bar.get_x() + bar.get_width() / 2, height),
-#                                       xytext=(0, 5), textcoords="offset points", ha='center', fontsize=8)
-#                     add_figure_slide(prs, "Top 10 Credit Months", fig_c)
-#
-#                 # ---- Save PPTX to buffer ----
-#                 pptx_io = io.BytesIO()
-#                 prs.save(pptx_io)
-#                 pptx_io.seek(0)
-#
-#                 # Download in Streamlit
-#                 st.download_button(
-#                     label="⬇️ Click here to download your OCA Financial Report",
-#                     data=pptx_io,
-#                     file_name=f"OCA_Financial_Report_{datetime.now().strftime('%Y-%m-%d')}.pptx",
-#                     mime="application/vnd.openxmlformats-officedocument.presentationml.presentation"
-#                 )
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-#
-
-    # else:
-    #     st.info("⬆️ Upload a CSV file to begin financial analysis.")
-
-
-# =================================================================================== PART 33
-
-
-def financial_ui():
-    import matplotlib.pyplot as plt
-    import matplotlib.ticker as mtick
-    from pptx import Presentation
-    from pptx.util import Inches, Pt
-    from pptx.enum.text import PP_ALIGN
-    from pptx.dml.color import RGBColor
-    import io
-    from datetime import datetime
-    import pandas as pd
-    import streamlit as st
+#     from pptx import Presentation
+#     from pptx.util import Inches, Pt
+#     from pptx.enum.text import PP_ALIGN
+#     from pptx.dml.color import RGBColor
+#     import io
+#     from datetime import datetime
+#     import pandas as pd
+#     import streamlit as st
     import os
 
     # ---------------- CSS for dashboard cards ----------------
@@ -2915,8 +2429,8 @@ def financial_ui():
 
     st.title("💰 OCA Financial Data Analyzer")
     st.markdown("""
-    Upload your **financial CSV file** (e.g., BMO bank statement) below.  
-    The system extracts *Posted Date, Description, Type, Credit/Debit, and Amount*  
+    Upload your **financial CSV file** (e.g., BMO bank statement) below.
+    The system extracts *Posted Date, Description, Type, Credit/Debit, and Amount*
     and generates smart monthly summaries, annotated charts, and key highlights.
     """)
 
@@ -2932,6 +2446,7 @@ def financial_ui():
         df = pd.read_csv(uploaded_file, encoding="ISO-8859-1")
 
     df.columns = df.columns.str.strip().str.upper()
+
     if "POSTED DATE" not in df.columns:
         st.error("❌ Missing 'POSTED DATE' column in file.")
         return
@@ -2940,16 +2455,23 @@ def financial_ui():
     df["CREDIT/DEBIT"] = df["CREDIT/DEBIT"].astype(str).str.strip().str.title()
     df["MONTH"] = df["POSTED DATE"].dt.to_period("M")
 
+
     # ---------------- Monthly summary ----------------
     monthly_summary = df.groupby(["MONTH", "CREDIT/DEBIT"]).agg({"AMOUNT": "sum"}).reset_index()
-    monthly_pivot = monthly_summary.pivot(index="MONTH", columns="CREDIT/DEBIT",
-                                          values="AMOUNT").fillna(0)
+
+    monthly_pivot = monthly_summary.pivot(
+        index="MONTH",
+        columns="CREDIT/DEBIT",
+        values="AMOUNT"
+    ).fillna(0)
+
     monthly_pivot["NET FLOW"] = monthly_pivot.get("Credit", 0) - monthly_pivot.get("Debit", 0)
 
     top_desc_type = df.groupby("MONTH").agg({
-        "DESCRIPTION": lambda x: x.value_counts().index[0],
-        "TYPE": lambda x: x.value_counts().index[0]
+        "DESCRIPTION": lambda x: x.value_counts().index[0] if not x.empty else "",
+        "TYPE": lambda x: x.value_counts().index[0] if not x.empty else ""
     })
+
     final_summary = monthly_pivot.join(top_desc_type).reset_index()
     final_summary["MONTH"] = pd.to_datetime(final_summary["MONTH"].astype(str)).dt.strftime("%b-%y")
 
@@ -2967,6 +2489,30 @@ def financial_ui():
           <div class="card"><div class="label">Avg. Monthly Credit</div><div class="value">${avg_monthly_credit:,.2f}</div></div>
         </div>
     """, unsafe_allow_html=True)
+
+    # ---------------- Summary table ----------------
+    st.subheader("📅 Monthly Credit & Debit Summary")
+    st.dataframe(final_summary, use_container_width=True, hide_index=True)
+
+    # ---------------- Full dataset (Expandable) ----------------
+    st.subheader("📂 Full Transaction Data")
+
+    with st.expander(f"Click to view all transaction rows ({len(df)} records)", expanded=False):
+        st.dataframe(df, use_container_width=True, hide_index=True)
+
+        # Optional download button
+        csv = df.to_csv(index=False).encode("utf-8")
+        st.download_button(
+            label="⬇️ Download Full Data",
+            data=csv,
+            file_name="transactions.csv",
+            mime="text/csv"
+        )
+
+# # ======================================= ENDS HERE
+#
+#
+#
 
     st.subheader("📅 Monthly Credit & Debit Summary")
     st.dataframe(final_summary, use_container_width=True, hide_index=True)
@@ -3130,6 +2676,1294 @@ def financial_ui():
             mime="application/vnd.openxmlformats-officedocument.presentationml.presentation"
         )
 
+# hjhjhjhjhjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj START HERE
+        # ===================================================================================
+        # 🔥 OCA DUES ANALYSIS (NEW SECTION - DOES NOT TOUCH FINANCIAL UI)
+
+# PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP  PART 2
+
+
+#
+def financial_ui():
+    import matplotlib.pyplot as plt
+    import matplotlib.ticker as mtick
+    from pptx import Presentation
+    from pptx.util import Inches, Pt
+    from pptx.enum.text import PP_ALIGN
+    from pptx.dml.color import RGBColor
+    import io
+    from datetime import datetime
+    import pandas as pd
+    import streamlit as st
+
+# def oca_dues_ui():
+
+    import pandas as pd
+    import streamlit as st
+    import re
+    from difflib import SequenceMatcher
+
+    st.divider()
+    st.subheader("👥 OCA Member Dues Analysis (Household Level)")
+
+    uploaded_file = st.file_uploader(
+        "📂 Upload Bank CSV for Dues Analysis",
+        type=["csv"],
+        key="dues_upload"
+    )
+
+    if uploaded_file is None:
+        st.info("Upload bank statement to analyze dues")
+        return
+
+    # ===================================================================================
+    # MASTER MEMBER LIST (FULL)
+    # ===================================================================================
+    members_data = [
+        (1, "MR KELECHI ACHOLONU", 0), (1, "MRS NKIRU ACHOLONU", 0),
+        (2, "MRS ROSEMARY ANYANWA", 0),
+        (3, "MR HYACIENTH ANYASO CHIEF", 0), (3, "MRS LYDIA ANYASO LOLO", 0),
+        (4, "DOC NNEKA CHUKWU", 0),
+        (5, "MR CHIAGORO CHUKWUMA", 0),
+        (6, "MR EMMA DIALA", 0), (6, "MRS JOYCE DIALA", 0),
+        (7, "MRS GLORIA DURU", 0),
+        (8, "MRS LUCY ECHIBE", 0),
+        (9, "MRS AGNES EGU", 0),
+        (10, "MRS ROSE EGU", 0),
+        (11, "MR ALEXANDER A EKE", 0), (11, "MRS LINDA EKE", 35.01),
+        (12, "MR DAMIAN EKE CHIEF", 0), (12, "MR ULOMA EKE LOLO", 0),
+        (13, "MR CYPRIAN EGEOLU", 0), (13, "MRS EGEOLU", 0),
+        (14, "MRS ADAMNA EMEZIE", 0),
+        (15, "MR PRINCE IBE", 0), (15, "MRS CHINWE IBE", 0),
+        (16, "MR ANTHONY IHEJITO", 0),
+        (17, "DOC STANLEY NJOKU", 0), (17, "MRS AMAKA NJOKU", 0),
+        (18, "REV SISTER AKUNNA NJOKU", 0),
+        (19, "MR LINUS NWAULU", 0), (19, "MRS NWAULU", 0),
+        (20, "MR PETER OBILOR", 0),
+        (21, "MRS VIVIAN OBICHERE", 0),
+        (22, "MR ETHEBERT OGBUEHI", 0),
+        (23, "MR KINSLEY OGWUDIRE", 0), (23, "MRS IJEOMA OGWUDIRE", 0),
+        (24, "MRS JULIE OJIBE", 0),
+        (25, "MR THEOPHILUS N ONYENEKE", 0), (25, "MRS BEATRICE ONYENEKE", 35.01),
+        (26, "SIR ETHELBERT R ONYEWUNYI", 0),
+        (27, "MR OKEY S ONYENWE", 0), (27, "MRS ONYENWE", 0),
+        (28, "MR DAMIAN ONYEUKWU", 0),
+        (29, "MR EMEKA OPARAOCHEKWE", 0),
+        (30, "MR WILSON UDENJI", 0),
+        (31, "MR OBI UGORJI", 0), (31, "MRS CHINONYE UGORJI", 0),
+        (32, "DOC GIBSON UNAJI", 0),
+        (33, "MR AUSTIN UWAKWE", 0), (33, "MRS PAMELA UWAKWE", 0),
+        (34, "MR DAVID UZOMA UZOHUO", 0), (34, "MRS UZOHUO", 0),
+        (35, "MRS JOSEPHINE YOKO UZOMA", 0),
+
+        (36, "MRS BEATRICE EGU", 17.21),
+        (37, "MR ERNEST EGU", 34.41),
+        (38, "MRS JOY EGU", 17.21),
+        (39, "MRS LILIAN EGU", 34.41), (39, "MR ROBERT EGU", 17.21),
+        (40, "MRS BEATRICE EKE", 34.41),
+        (41, "MRS AUGUSTINA EKEH", 17.81), (41, "MR GEORGE EKEH", 17.21),
+        (42, "MISS LORETTA OGECHI IWU", 34.41),
+        (43, "MRS JACINTA MBATA", 35.01), (43, "MR CHRISTOPHER ORJI", 17.21),
+        (44, "MRS MARGARET P NWACHUKWU AKAW", 17.21),
+        (45, "LADY JOANNES NWADIBIA", 17.81),
+        (46, "MRS CONSTANCE NWADIKE", 35.01),
+        (47, "MR AUGUSTINE NWAOGU", 35.01), (47, "MRS NGOZI NWAOGU", 35.01),
+        (48, "MR ADOLF OBILOR", 17.21), (48, "MRS MARGARET NGOZI OBILOR", 35.01),
+        (49, "MR INNOCENT OBILOR", 17.21),
+        (50, "MR CASMIR OBINNA", 35.01),
+        (51, "MRS ELIZABERTH OHA", 34.41), (51, "MR LINUS OHA", 35.01),
+        (52, "MR PAUL OHA", 35.01), (52, "MRS JOYCE OHA", 35.01),
+        (53, "MRS ROSA ONYEAGUCHA", 34.41),
+        (54, "MRS FIDELIA ONYEJIKWE", 17.21),
+        (55, "MRS GLORIA OPARA", 34.41), (55, "MR UGO HARRIS OPARA", 34.41),
+        (56, "MR IK F ORJI", 17.21), (56, "MRS VERONICA ORJI", 35.01),
+        (57, "MRS CELINE OSUALA", 17.21),
+        (58, "MR AUGUSTINE OWOBETE", 34.41), (58, "MRS GRACE N OWOBETE", 35.01),
+        (59, "MR CHINONYE UZOMA", 35.01), (59, "MRS MARINA UZOMA", 35.01),
+        (60, "MR TOM MBARA", 0), (60, "MRS EMELDA MBARA", 0),
+    ]
+
+
+# ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]] part
+
+    members_df = pd.DataFrame(members_data, columns=["COUPLE_ID", "NAME", "INSURANCE"])
+
+    BASE_DUE = 10
+    grouped = members_df.groupby("COUPLE_ID")
+
+    couple_df = grouped.agg({
+        "NAME": lambda x: " & ".join(x),
+        "INSURANCE": "sum"
+    }).reset_index()
+
+    couple_df["DUES_TOTAL"] = grouped.size().values * BASE_DUE
+    couple_df.rename(columns={"INSURANCE": "INSURANCE_TOTAL"}, inplace=True)
+    couple_df["MONTHLY_TOTAL"] = couple_df["DUES_TOTAL"] + couple_df["INSURANCE_TOTAL"]
+
+    # ===================================================================================
+    # LOAD BANK
+    # ===================================================================================
+    df = pd.read_csv(uploaded_file, encoding="ISO-8859-1")
+    df.columns = df.columns.str.upper().str.strip()
+
+    df["POSTED DATE"] = pd.to_datetime(df["POSTED DATE"], errors="coerce")
+    df["DESCRIPTION"] = df["DESCRIPTION"].astype(str).str.upper()
+    df["AMOUNT"] = pd.to_numeric(df["AMOUNT"], errors="coerce").fillna(0)
+    df["CREDIT/DEBIT"] = df["CREDIT/DEBIT"].str.title()
+
+    payments = df[df["CREDIT/DEBIT"] == "Credit"].copy()
+
+    # ===================================================================================
+    # CHECK INPUT
+    # ===================================================================================
+    st.subheader("➕ Add Check Payment")
+
+    if "manual_checks" not in st.session_state:
+        st.session_state.manual_checks = []
+
+    name_input = st.selectbox("Select Member", members_df["NAME"].unique())
+    amt_input = st.number_input("Amount", min_value=0.0, step=10.0)
+    date_input = st.date_input("Date")
+
+    if st.button("Add Check"):
+        st.session_state.manual_checks.append({
+            "NAME": name_input,
+            "AMOUNT": amt_input,
+            "POSTED DATE": pd.to_datetime(date_input),
+            "CREDIT/DEBIT": "Credit"
+        })
+        st.success("Check added")
+
+    if st.session_state.manual_checks:
+        st.dataframe(pd.DataFrame(st.session_state.manual_checks))
+
+    # ===================================================================================
+    # MATCHING
+    # ===================================================================================
+    def clean_tokens(x):
+        x = re.sub(r"[^A-Z\s]", " ", str(x).upper())
+        remove = ["MR", "MRS", "DOC", "DR", "MISS", "SIR", "REV", "SISTER", "FROM", "ZELLE"]
+        for r in remove:
+            x = x.replace(r, " ")
+        return set(x.split())
+
+    ALIAS_MAP = {
+        "THOMAS MBARA": "TOM MBARA",
+        "ROY ONYEWUNYI": "ETHELBERT R ONYEWUENYI"
+    }
+
+    def match_name(raw):
+        raw = raw.upper()
+        for a, v in ALIAS_MAP.items():
+            if a in raw:
+                raw = v
+
+        rt = clean_tokens(raw)
+        best = None
+        best_score = 0
+
+        for _, row in members_df.iterrows():
+            mt = clean_tokens(row["NAME"])
+            overlap = len(rt & mt) / max(len(mt), 1)
+            char = SequenceMatcher(None, " ".join(rt), " ".join(mt)).ratio()
+            score = max(overlap, char)
+
+            if score > best_score:
+                best_score = score
+                best = row["NAME"]
+
+        return best if best_score >= 0.65 else None
+
+    payments["NAME_RAW"] = payments["DESCRIPTION"]
+    payments["NAME"] = payments["DESCRIPTION"].apply(match_name)
+
+    # ===================================================================================
+    # MERGE CHECKS
+    # ===================================================================================
+    if st.session_state.manual_checks:
+        check_df = pd.DataFrame(st.session_state.manual_checks)
+        payments = pd.concat([payments, check_df], ignore_index=True)
+
+    payments["COUPLE_ID"] = payments["NAME"].map(
+        members_df.set_index("NAME")["COUPLE_ID"]
+    )
+
+    matched = payments[payments["COUPLE_ID"].notna()]
+    unmatched = payments[payments["COUPLE_ID"].isna()]
+
+    # ===================================================================================
+    # AGG
+    # ===================================================================================
+    paid = matched.groupby("COUPLE_ID")["AMOUNT"].sum().reset_index()
+    paid.rename(columns={"AMOUNT": "TOTAL_PAID"}, inplace=True)
+
+    report = couple_df.merge(paid, on="COUPLE_ID", how="left")
+    report["TOTAL_PAID"] = report["TOTAL_PAID"].fillna(0)
+
+    # ===================================================================================
+    # CALC
+    # ===================================================================================
+    CURRENT_MONTH = pd.Timestamp.today().to_period("M")
+    START_MONTH = pd.Period("2026-01")
+
+    months_due = (CURRENT_MONTH - START_MONTH).n + 1
+
+    report["EXPECTED"] = report["MONTHLY_TOTAL"] * months_due
+
+    raw_balance = report["EXPECTED"] - report["TOTAL_PAID"]
+
+    report["BALANCE"] = raw_balance.clip(lower=0)
+    report["PAID_AHEAD_BY"] = raw_balance.apply(lambda x: abs(x) if x < 0 else 0)
+
+    report["MONTHS_BEHIND"] = (report["BALANCE"] / report["MONTHLY_TOTAL"]).astype(int)
+
+    # ======================================= MODIFY
+    report["MONTHS_BEHIND"] = (report["BALANCE"] / report["MONTHLY_TOTAL"]).astype(int)
+
+    # ===================================================================================
+    # 🔥 STATUS COLUMN
+    # ===================================================================================
+    report["MONTHS_PAID"] = (report["TOTAL_PAID"] / report["MONTHLY_TOTAL"]).fillna(0).astype(int)
+
+    def get_status(row):
+        if row["MONTHS_PAID"] >= 12:
+            return "PAID IN FULL"
+        elif row["MONTHS_BEHIND"] <= 3:
+            return "CURRENT"
+        else:
+            return "BEHIND"
+
+    report["STATUS"] = report.apply(get_status, axis=1)
+
+
+    # ========================================================================= FILTER MEMBERS PAID IN FULL AND
+    # ========================================================================= FILTER MEMBERS PAID IN FULL AND
+    # ========================================================================= FILTER MEMBERS PAID IN FULL AND
+    # ========================================================================= FILTER MEMBERS PAID IN FULL AND
+
+
+    # ===================================================================================
+    # DISPLAY
+    # ===================================================================================
+    st.dataframe(report, use_container_width=True)
+
+    # ===================================================================================
+    # 📊 STATUS TABLES (PAID / CURRENT / BEHIND)
+    # ===================================================================================
+    st.subheader("📊 Member Status Breakdown")
+
+    # 🟢 PAID IN FULL
+    paid_full = report[report["STATUS"] == "PAID IN FULL"].copy()
+
+    st.markdown(f"### 🟢 Paid In Full ({len(paid_full)})")
+    st.dataframe(
+        paid_full[
+            [
+                "COUPLE_ID",
+                "NAME",
+                "MONTHLY_TOTAL",
+                "TOTAL_PAID",
+                "EXPECTED",
+                "BALANCE",
+                "MONTHS_PAID",
+                "STATUS"
+            ]
+        ],
+        use_container_width=True
+    )
+
+    # 🟡 CURRENT
+    current = report[report["STATUS"] == "CURRENT"].copy()
+
+    st.markdown(f"### 🟡 Current (≤ 3 Months Behind) ({len(current)})")
+    st.dataframe(
+        current[
+            [
+                "COUPLE_ID",
+                "NAME",
+                "MONTHLY_TOTAL",
+                "TOTAL_PAID",
+                "EXPECTED",
+                "BALANCE",
+                "MONTHS_BEHIND",
+                "STATUS"
+            ]
+        ],
+        use_container_width=True
+    )
+
+    # 🔴 BEHIND (3+ MONTHS)
+    behind = report[report["MONTHS_BEHIND"] >= 3].copy()
+
+    # Optional sort (most owed first)
+    behind = behind.sort_values("BALANCE", ascending=False)
+
+    st.markdown(f"### 🔴 Behind (3+ Months) ({len(behind)})")
+    st.dataframe(
+        behind[
+            [
+                "COUPLE_ID",
+                "NAME",
+                "MONTHLY_TOTAL",
+                "TOTAL_PAID",
+                "EXPECTED",
+                "BALANCE",
+                "MONTHS_BEHIND",
+                "STATUS"
+            ]
+        ],
+        use_container_width=True
+    )
+    #
+
+
+
+    # 📊 ENHANCED SUMMARY (WITH TOTAL AMOUNT OWED)
+    # ===================================================================================
+    st.subheader("📊 Summary")
+
+    summary = report.groupby("MONTHS_BEHIND").agg(
+        COUNT=("COUPLE_ID", "count"),
+        TOTAL_BALANCE=("BALANCE", "sum")
+    ).reset_index().sort_values("MONTHS_BEHIND", ascending=False)
+
+    # 🔥 Format money
+    summary["TOTAL_BALANCE"] = summary["TOTAL_BALANCE"].apply(lambda x: f"${x:,.2f}")
+
+    st.dataframe(summary, use_container_width=True)
+
+    with st.expander(f"⚠️ Unmatched Payments ({len(unmatched)})"):
+        st.dataframe(unmatched[["POSTED DATE", "DESCRIPTION", "AMOUNT", "NAME_RAW"]])
+
+
+
+# ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]] DISPLAY THOSE CURRENT
+
+
+
+
+
+
+
+
+
+
+# ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+# SUMMARY AND GRAPHS FOR MONEY RECIEVED
+# \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    # ===================================================================================
+    # 💰 PAYMENT RECONCILIATION SUMMARY
+    # ===================================================================================
+
+    st.divider()
+
+    st.subheader("💰 Payment Reconciliation Summary")
+
+    # 🔥 Total received (ALL money: Zelle + Checks)
+    total_received = payments["AMOUNT"].sum()
+
+    # 🔥 Assigned (matched to households)
+    total_assigned = matched["AMOUNT"].sum()
+
+    # 🔥 Unassigned (not matched)
+    total_unassigned = unmatched["AMOUNT"].sum()
+
+    # 🔥 Sanity check
+    difference = total_received - (total_assigned + total_unassigned)
+
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        st.metric("Total Received", f"${total_received:,.2f}")
+
+    with col2:
+        st.metric("Assigned to Households", f"${total_assigned:,.2f}")
+
+    with col3:
+        st.metric("Unassigned", f"${total_unassigned:,.2f}")
+
+    # 🔥 Validation check
+    if abs(difference) > 0.01:
+        st.error(f"⚠️ Reconciliation mismatch: ${difference:,.2f}")
+    else:
+        st.success("✅ Reconciliation balanced")
+
+    # ===================================================================================
+    # 🔍 OPTIONAL: SHOW UNASSIGNED DETAILS
+    # ===================================================================================
+    with st.expander(f"🔍 View Unassigned Payments (${total_unassigned:,.2f})"):
+        st.dataframe(
+            unmatched[["POSTED DATE", "DESCRIPTION", "AMOUNT", "NAME_RAW"]],
+            use_container_width=True
+        )
+
+
+# gggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg START HERE
+    # ===================================================================================
+    # 📈 MONTHLY CASHFLOW ANALYSIS (FINAL VERSION - PPT READY)
+    # ===================================================================================
+    import matplotlib.pyplot as plt
+
+    st.subheader("📈 Monthly Cashflow Analysis")
+
+    # -----------------------------------------------------------------------------------
+    # PREP DATA
+    # -----------------------------------------------------------------------------------
+    df["POSTED DATE"] = pd.to_datetime(df["POSTED DATE"], errors="coerce")
+    df = df[df["POSTED DATE"].notna()]
+
+    df["MONTH"] = df["POSTED DATE"].dt.to_period("M").astype(str)
+
+    # 💰 Money In
+    monthly_in = df[df["CREDIT/DEBIT"] == "Credit"].groupby("MONTH")["AMOUNT"].sum()
+
+    # 💸 Money Out (FORCE POSITIVE)
+    monthly_out = df[df["CREDIT/DEBIT"] == "Debit"].groupby("MONTH")["AMOUNT"].sum().abs()
+
+    # Combine
+    monthly_df = pd.DataFrame({
+        "Money In ($)": monthly_in,
+        "Money Out ($)": monthly_out
+    }).fillna(0).reset_index()
+
+    # -----------------------------------------------------------------------------------
+    # SORT MONTH
+    # -----------------------------------------------------------------------------------
+    monthly_df["MONTH"] = pd.to_datetime(monthly_df["MONTH"])
+    monthly_df = monthly_df.sort_values("MONTH")
+    monthly_df["MONTH_STR"] = monthly_df["MONTH"].dt.strftime("%b-%Y")
+
+    # -----------------------------------------------------------------------------------
+    # 🔥 DIFF (CORRECT LOGIC)
+    # -----------------------------------------------------------------------------------
+    monthly_df["Diff ($)"] = monthly_df["Money In ($)"] - monthly_df["Money Out ($)"]
+
+    # -----------------------------------------------------------------------------------
+    # 📊 FORMAT TABLE ($ + ,)
+    # -----------------------------------------------------------------------------------
+    display_df = monthly_df.copy()
+
+    display_df["Money In ($)"] = display_df["Money In ($)"].apply(lambda x: f"${x:,.2f}")
+    display_df["Money Out ($)"] = display_df["Money Out ($)"].apply(lambda x: f"${x:,.2f}")
+    display_df["Diff ($)"] = display_df["Diff ($)"].apply(lambda x: f"${x:,.2f}")
+
+    st.dataframe(
+        display_df[["MONTH_STR", "Money In ($)", "Money Out ($)", "Diff ($)"]],
+        use_container_width=True
+    )
+
+    # ===================================================================================
+    # 📈 LINE CHART (ANNOTATED)
+    # ===================================================================================
+    st.subheader("📊 Monthly Trend (Annotated)")
+
+    fig, ax = plt.subplots(figsize=(10, 5))
+
+    ax.plot(monthly_df["MONTH_STR"], monthly_df["Money In ($)"], marker='o')
+    ax.plot(monthly_df["MONTH_STR"], monthly_df["Money Out ($)"], marker='o')
+
+    # Annotate values
+    for i, row in monthly_df.iterrows():
+        ax.text(i, row["Money In ($)"], f'${row["Money In ($)"]:,.0f}', ha='center', va='bottom')
+        ax.text(i, row["Money Out ($)"], f'${row["Money Out ($)"]:,.0f}', ha='center', va='top')
+
+    ax.set_title("Monthly Cashflow")
+    ax.set_xlabel("Month")
+    ax.set_ylabel("Amount ($)")
+    ax.legend(["Money In", "Money Out"])
+
+    plt.xticks(rotation=69)  # ✅ ROTATE LABELS
+
+    st.pyplot(fig)
+
+    # ===================================================================================
+    # 📊 BAR CHART (ANNOTATED)
+    # ===================================================================================
+    st.subheader("📊 Monthly Comparison")
+
+    fig_bar, ax_bar = plt.subplots(figsize=(10, 5))
+
+    x = range(len(monthly_df))
+
+    bars1 = ax_bar.bar(x, monthly_df["Money In ($)"])
+    bars2 = ax_bar.bar(x, monthly_df["Money Out ($)"])
+
+    ax_bar.set_xticks(x)
+    ax_bar.set_xticklabels(monthly_df["MONTH_STR"])
+
+    # Annotate bars
+    for bar in bars1:
+        height = bar.get_height()
+        ax_bar.text(bar.get_x() + bar.get_width() / 2, height,
+                    f'${height:,.0f}', ha='center', va='bottom')
+
+    for bar in bars2:
+        height = bar.get_height()
+        ax_bar.text(bar.get_x() + bar.get_width() / 2, height,
+                    f'${height:,.0f}', ha='center', va='top')
+
+    ax_bar.set_title("Monthly Comparison")
+    ax_bar.set_ylabel("Amount ($)")
+    ax_bar.legend(["Money In", "Money Out"])
+
+    plt.xticks(rotation=69)  # ✅ ROTATE LABELS
+
+    st.pyplot(fig_bar)
+
+    # ===================================================================================
+    # 💰 DIFF GRAPH (FINAL)
+    # ===================================================================================
+    st.subheader("💰 Monthly Difference (Diff)")
+
+    fig_diff, ax_diff = plt.subplots(figsize=(10, 5))
+
+    ax_diff.plot(monthly_df["MONTH_STR"], monthly_df["Diff ($)"], marker='o')
+
+    # Annotate Diff values
+    for i, row in monthly_df.iterrows():
+        ax_diff.text(i, row["Diff ($)"], f'${row["Diff ($)"]:,.0f}',
+                     ha='center', va='bottom')
+
+    ax_diff.set_title("Monthly Difference")
+    ax_diff.set_xlabel("Month")
+    ax_diff.set_ylabel("Amount ($)")
+    ax_diff.legend(["Diff"])
+
+    plt.xticks(rotation=69)  # ✅ ROTATE LABELS
+
+    st.pyplot(fig_diff)
+
+    st.divider()
+
+# ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+    # ===================================================================================
+    # 📊 COLLECTION PERFORMANCE (YEAR vs ACTUAL)
+    # ===================================================================================
+    st.subheader("📊 Collection Performance Overview")
+
+    # -----------------------------------------------------------------------------------
+    # 🔥 TIME LOGIC
+    # -----------------------------------------------------------------------------------
+    current_period = pd.Timestamp.today().to_period("M")
+    start_period = pd.Period("2026-01")
+    end_period = pd.Period("2026-12")
+
+    months_elapsed = (current_period - start_period).n + 1
+    total_year_months = 12
+
+    # -----------------------------------------------------------------------------------
+    # 💰 EXPECTED CALCULATIONS
+    # -----------------------------------------------------------------------------------
+    # Total monthly obligation across all households
+    total_monthly_expected = report["MONTHLY_TOTAL"].sum()
+
+    # Expected by now
+    expected_to_date = total_monthly_expected * months_elapsed
+
+    # Expected full year
+    expected_full_year = total_monthly_expected * total_year_months
+
+    # -----------------------------------------------------------------------------------
+    # 💵 ACTUAL RECEIVED
+    # -----------------------------------------------------------------------------------
+    # total_received = report["TOTAL_PAID"].sum()
+
+    total_received = payments["AMOUNT"].sum()
+
+    # -----------------------------------------------------------------------------------
+    # 📊 VARIANCE
+    # -----------------------------------------------------------------------------------
+    variance_to_date = total_received - expected_to_date
+    variance_full_year = total_received - expected_full_year
+
+    # -----------------------------------------------------------------------------------
+    # 📊 DISPLAY METRICS
+    # -----------------------------------------------------------------------------------
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.markdown("### 📅 Year-to-Date Performance")
+        st.metric(
+            "Expected (YTD)",
+            f"${expected_to_date:,.2f}"
+        )
+        st.metric(
+            "Received (YTD)",
+            f"${total_received:,.2f}"
+        )
+        st.metric(
+            "Difference",
+            f"${variance_to_date:,.2f}"
+        )
+
+    with col2:
+        st.markdown("### 📆 Full Year Projection")
+        st.metric(
+            "Expected (Full Year)",
+            f"${expected_full_year:,.2f}"
+        )
+        st.metric(
+            "Received So Far",
+            f"${total_received:,.2f}"
+        )
+        st.metric(
+            "Gap to Year Target",
+            f"${variance_full_year:,.2f}"
+        )
+
+    # -----------------------------------------------------------------------------------
+    # 🔥 COLLECTION RATE
+    # -----------------------------------------------------------------------------------
+    collection_rate = (total_received / expected_to_date * 100) if expected_to_date > 0 else 0
+
+    st.metric("📈 Collection Rate (YTD)", f"{collection_rate:.1f}%")
+
+    # -----------------------------------------------------------------------------------
+    # 🚨 STATUS MESSAGE
+    # -----------------------------------------------------------------------------------
+    if variance_to_date >= 0:
+        st.success("✅ Collections are on track or ahead")
+    else:
+        st.warning("⚠️ Collections are behind schedule")
+
+    st.divider()
+
+    # ===================================================================================
+    # 📊 COLLECTION PERFORMANCE GRAPH (PPT READY)
+    # ===================================================================================
+    import matplotlib.pyplot as plt
+
+    st.subheader("📊 Collection Performance (Visual)")
+
+    labels = ["Expected (YTD)", "Received (YTD)", "Gap"]
+
+    values = [
+        expected_to_date,
+        total_received,
+        variance_to_date
+    ]
+
+    fig, ax = plt.subplots(figsize=(8, 5))
+
+    bars = ax.bar(labels, values)
+
+    # Annotate values ($ + comma)
+    for bar in bars:
+        height = bar.get_height()
+        ax.text(
+            bar.get_x() + bar.get_width() / 2,
+            height,
+            f'${height:,.0f}',
+            ha='center',
+            va='bottom'
+        )
+
+    # Titles
+    ax.set_title("Expected vs Actual Collection")
+    ax.set_ylabel("Amount ($)")
+
+    st.pyplot(fig)
+
+    # ===================================================================================
+    # 📊 ANNUAL COLLECTION PERFORMANCE GRAPH
+    # ===================================================================================
+    st.subheader("📆 Annual Collection Benchmark")
+
+    import matplotlib.pyplot as plt
+
+    # 🔥 VALUES
+    annual_labels = ["Expected (Full Year)", "Received (So Far)", "Remaining Gap"]
+
+    remaining_gap = expected_full_year - total_received
+
+    annual_values = [
+        expected_full_year,
+        total_received,
+        remaining_gap
+    ]
+
+    fig2, ax2 = plt.subplots(figsize=(8, 5))
+
+    bars = ax2.bar(annual_labels, annual_values)
+
+    # 🔥 Annotate values ($ + commas)
+    for bar in bars:
+        height = bar.get_height()
+        ax2.text(
+            bar.get_x() + bar.get_width() / 2,
+            height,
+            f'${height:,.0f}',
+            ha='center',
+            va='bottom'
+        )
+
+    # Titles
+    ax2.set_title("Annual Expected vs Actual Collection")
+    ax2.set_ylabel("Amount ($)")
+
+    st.pyplot(fig2)
+
+
+
+# \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ POWER POINT slides
+#
+
+# =========================================================================PAER 2
+
+    # ===================================================================================
+    # 📊 POWERPOINT FINANCIAL REPORT GENERATOR (FINAL - NO OVERFLOW)
+    # ===================================================================================
+    import io
+    from pptx import Presentation
+    from pptx.util import Inches, Pt
+    from pptx.enum.text import PP_ALIGN, MSO_AUTO_SIZE
+    from pptx.dml.color import RGBColor
+    import matplotlib.pyplot as plt
+    from datetime import datetime
+    import os
+
+    st.divider()
+    st.subheader("📥 Download Financial PowerPoint Report")
+
+    if st.button("📊 Download Financial PPT Report"):
+
+        prs = Presentation()
+
+        # ===================================================================================
+        # 1️⃣ TITLE SLIDE (UNCHANGED DESIGN)
+        # ===================================================================================
+        slide = prs.slides.add_slide(prs.slide_layouts[6])
+
+        logo_path = r"C:\Users\stans\OneDrive\Desktop\OCA\01 -STANLEY'S ADMINISTRATION - PRESIDENT\OCA NEW LOGO\OCA - FNEW ACE LOGO.png"
+
+        if os.path.exists(logo_path):
+            slide.shapes.add_picture(logo_path, Inches(3.5), Inches(0.3), width=Inches(2))
+
+        org_box = slide.shapes.add_textbox(Inches(1), Inches(1.5), Inches(8), Inches(1))
+        tf = org_box.text_frame
+        p = tf.paragraphs[0]
+        p.text = "Owerri Cultural Association (OCA)"
+        p.font.size = Pt(28)
+        p.font.bold = True
+        p.font.color.rgb = RGBColor(0, 0, 128)
+        p.alignment = PP_ALIGN.CENTER
+
+        title_box = slide.shapes.add_textbox(Inches(1), Inches(2.5), Inches(8), Inches(1.5))
+        tf = title_box.text_frame
+        p = tf.paragraphs[0]
+        p.text = "Financial Report"
+        p.font.size = Pt(44)
+        p.font.bold = True
+        p.alignment = PP_ALIGN.CENTER
+
+        current_month = datetime.now().strftime("%B %Y")
+
+        p2 = tf.add_paragraph()
+        p2.text = current_month
+        p2.font.size = Pt(24)
+        p2.alignment = PP_ALIGN.CENTER
+
+        info_box = slide.shapes.add_textbox(Inches(1.5), Inches(4.5), Inches(7), Inches(2))
+        tf = info_box.text_frame
+
+        tf.text = "Financial Secretary: Mr. Ugo Harris Opara"
+        tf.add_paragraph().text = "Assistant Financial Secretary: Mrs. Pamela Uwakwe"
+        tf.add_paragraph().text = "Treasurer: Lady Ogechi Iwu"
+
+        footer = slide.shapes.add_textbox(Inches(1), Inches(6.5), Inches(8), Inches(0.5))
+        footer.text_frame.text = f"Generated on {datetime.now():%B %d, %Y}"
+
+        # ===================================================================================
+        # HELPER: ADD CHART SLIDE (UNCHANGED)
+        # ===================================================================================
+        def add_slide(title, fig):
+            slide = prs.slides.add_slide(prs.slide_layouts[6])
+
+            tbox = slide.shapes.add_textbox(Inches(0.5), Inches(0.3), Inches(9), Inches(0.8))
+            tf = tbox.text_frame
+            tf.text = title
+            tf.paragraphs[0].font.size = Pt(28)
+            tf.paragraphs[0].font.bold = True
+
+            img = io.BytesIO()
+            fig.savefig(img, format="png", dpi=200, bbox_inches="tight")
+            img.seek(0)
+
+            slide.shapes.add_picture(img, Inches(0.5), Inches(1.2), width=Inches(9))
+
+        # ===================================================================================
+        # HELPER: TABLE (8 ROWS PER SLIDE - FINAL FIX)
+        # ===================================================================================
+        def add_table_slides(title, df, columns, rows_per_slide=8):
+
+            total_rows = len(df)
+            num_slides = (total_rows // rows_per_slide) + 1
+
+            for s in range(num_slides):
+
+                slide = prs.slides.add_slide(prs.slide_layouts[6])
+
+                # Title
+                tbox = slide.shapes.add_textbox(Inches(0.5), Inches(0.3), Inches(9), Inches(0.8))
+                tf = tbox.text_frame
+                tf.text = f"{title} (Part {s + 1})"
+                tf.paragraphs[0].font.size = Pt(28)
+                tf.paragraphs[0].font.bold = True
+
+                chunk = df.iloc[s * rows_per_slide:(s + 1) * rows_per_slide]
+
+                rows = len(chunk) + 1
+                cols = len(columns)
+
+                table = slide.shapes.add_table(
+                    rows, cols, Inches(0.3), Inches(1.2), Inches(9), Inches(4.5)
+                ).table
+
+                # 🔥 COLUMN WIDTH FIX
+                table.columns[0].width = Inches(4.0)
+                for i in range(1, cols):
+                    table.columns[i].width = Inches(1.6)
+
+                # Headers
+                for i, col in enumerate(columns):
+                    cell = table.cell(0, i)
+                    cell.text = col
+                    cell.text_frame.paragraphs[0].font.bold = True
+
+                # Data
+                for r, (_, row) in enumerate(chunk.iterrows(), start=1):
+                    for c, col in enumerate(columns):
+
+                        val = row[col]
+
+                        if isinstance(val, (int, float)):
+                            val = f"${val:,.0f}"
+
+                        cell = table.cell(r, c)
+                        tf = cell.text_frame
+                        tf.clear()
+
+                        p = tf.paragraphs[0]
+                        p.text = str(val)
+
+                        tf.word_wrap = True
+                        tf.auto_size = MSO_AUTO_SIZE.TEXT_TO_FIT_SHAPE
+
+                # 🔥 ROW HEIGHT FIX
+                for i in range(rows):
+                    table.rows[i].height = Inches(0.6)
+
+        # ===================================================================================
+        # CHARTS (UNCHANGED)
+        # ===================================================================================
+        add_slide("Monthly Cashflow Trend", fig)
+        add_slide("Monthly Comparison", fig_bar)
+        add_slide("Monthly Difference", fig_diff)
+
+        # ===================================================================================
+        # 📊 MONTHLY CASHFLOW TABLE
+        # ===================================================================================
+        cashflow_table = monthly_df.rename(columns={
+            "MONTH_STR": "Month",
+            "Money In ($)": "Money In",
+            "Money Out ($)": "Money Out",
+            "Diff ($)": "Diff"
+        })
+
+        add_table_slides(
+            "Monthly Cashflow Table",
+            cashflow_table,
+            ["Month", "Money In", "Money Out", "Diff"]
+        )
+
+        # ===================================================================================
+        # 🚨 DELINQUENCY TABLE
+        # ===================================================================================
+        clean_high_due = report[report["MONTHS_BEHIND"] >= 3].copy()
+
+        add_table_slides(
+            "🚨 Households Owing 3+ Months",
+            clean_high_due,
+            ["NAME", "TOTAL_PAID", "EXPECTED", "BALANCE"]
+        )
+
+        # ===================================================================================
+        # ===================================================================================
+        # 📊 SUMMARY TABLE (POWERPOINT SLIDE) - FIXED
+        # ===================================================================================
+        def add_summary_slide(summary_df):
+
+            slide = prs.slides.add_slide(prs.slide_layouts[6])
+
+            # Title
+            tbox = slide.shapes.add_textbox(Inches(0.5), Inches(0.3), Inches(9), Inches(0.8))
+            tf = tbox.text_frame
+            tf.text = "📊 Summary"
+            tf.paragraphs[0].font.size = Pt(28)
+            tf.paragraphs[0].font.bold = True
+
+            rows = len(summary_df) + 1
+            cols = 3
+
+            table = slide.shapes.add_table(
+                rows, cols, Inches(1), Inches(1.5), Inches(7), Inches(4)
+            ).table
+
+            # Column headers
+            headers = ["Months Behind", "Count", "Total Balance"]
+            for i, h in enumerate(headers):
+                cell = table.cell(0, i)
+                cell.text = h
+                cell.text_frame.paragraphs[0].font.bold = True
+
+            # Data rows (SAFE FIX APPLIED)
+            for r, (_, row) in enumerate(summary_df.iterrows(), start=1):
+
+                # Months Behind
+                table.cell(r, 0).text = str(int(row["MONTHS_BEHIND"]))
+
+                # Count
+                table.cell(r, 1).text = str(int(row["COUNT"]))
+
+                # 🔥 SAFE MONEY FORMAT (NO MORE ERROR)
+                val = row["TOTAL_BALANCE"]
+                val = str(val).replace("$", "").replace(",", "")
+
+                try:
+                    val = float(val)
+                    formatted = f"${val:,.2f}"
+                except:
+                    formatted = str(val)
+
+                table.cell(r, 2).text = formatted
+
+            # Column widths
+            table.columns[0].width = Inches(2.5)
+            table.columns[1].width = Inches(2)
+            table.columns[2].width = Inches(2.5)
+
+        # ===================================================================================
+        # CALL FUNCTION
+        # ===================================================================================
+        add_summary_slide(summary)
+
+        # ===================================================================================
+        # 🙏 THANK YOU SLIDE (FINAL PAGE)
+        # ===================================================================================
+        def add_thank_you_slide():
+
+            slide = prs.slides.add_slide(prs.slide_layouts[6])
+
+            # Main message
+            tbox = slide.shapes.add_textbox(Inches(1), Inches(2.5), Inches(8), Inches(2))
+            tf = tbox.text_frame
+
+            p = tf.paragraphs[0]
+            p.text = "🙏 Thank You for Your Time"
+            p.font.size = Pt(40)
+            p.font.bold = True
+            p.alignment = PP_ALIGN.CENTER
+
+            # Optional subtitle
+            p2 = tf.add_paragraph()
+            p2.text = "We appreciate your attention and support."
+            p2.font.size = Pt(20)
+            p2.alignment = PP_ALIGN.CENTER
+
+        # ===================================================================================
+        # CALL THANK YOU SLIDE (LAST SLIDE)
+        # ===================================================================================
+        add_thank_you_slide()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        # ===================================================================================
+        # EXPORT POWER POINT SLIDE
+        # ===================================================================================
+        pptx_io = io.BytesIO()
+        prs.save(pptx_io)
+        pptx_io.seek(0)
+
+        st.download_button(
+            "⬇️ Download OCA Financial Report",
+            data=pptx_io,
+            file_name=f"OCA_Financial_Report_{datetime.now():%Y%m%d}.pptx",
+            mime="application/vnd.openxmlformats-officedocument.presentationml.presentation"
+        )
+
+
+
+
+
+
+
+
+
+
+
+ # \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ GENERATE PDF
+
+
+
+# ================================================================ PART 2 PDF
+    # ===================================================================================
+    # 📄 EXECUTIVE-LEVEL OCA PDF REPORT (BEAUTIFIED)
+    # ===================================================================================
+    # ===================================================================================
+    # 📄 FINAL PROFESSIONAL PDF (LANDSCAPE + CLEAN TABLES + LEGENDS)
+    # ===================================================================================
+    # 📄 FINAL PROFESSIONAL PDF (FULL TABLE + NO OVERFLOW)
+    # ===================================================================================
+    # 📄 FINAL PROFESSIONAL PDF (FULL TABLE + SAFE MONEY FORMAT)
+    # ===================================================================================
+    from reportlab.platypus import (
+        SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle,
+        Image, PageBreak
+    )
+    from reportlab.lib import colors
+    from reportlab.lib.pagesizes import landscape, letter
+    from reportlab.lib.styles import getSampleStyleSheet
+    from reportlab.lib.units import inch
+
+    import matplotlib.pyplot as plt
+    import io
+    import os
+    import datetime
+    import pandas as pd
+
+    # ===================================================================================
+    # 🔥 SAFE MONEY FORMATTER (FIXES YOUR ERROR)
+    # ===================================================================================
+    def safe_money(val):
+        try:
+            return f"${float(str(val).replace('$', '').replace(',', '')):,.2f}"
+        except:
+            return "$0.00"
+
+    # ===================================================================================
+    # 🔥 TEXT WRAP
+    # ===================================================================================
+    def wrap_text(text, max_len=28):
+        words = str(text).split()
+        lines, current = [], ""
+
+        for w in words:
+            if len(current + " " + w) <= max_len:
+                current += " " + w
+            else:
+                lines.append(current.strip())
+                current = w
+        lines.append(current.strip())
+        return "\n".join(lines)
+
+    # ===================================================================================
+    # 🔥 FULL TABLE BUILDER (ALL COLUMNS SAFE)
+    # ===================================================================================
+    def build_full_table(df):
+
+        columns = [
+            "COUPLE_ID",
+            "NAME",
+            "MONTHLY_TOTAL",
+            "TOTAL_PAID",
+            "EXPECTED",
+            "BALANCE",
+            "MONTHS_BEHIND",
+            "STATUS"
+        ]
+
+        data = [columns]
+
+        for _, r in df.iterrows():
+            data.append([
+                int(r["COUPLE_ID"]) if pd.notna(r["COUPLE_ID"]) else "",
+                wrap_text(r["NAME"], 30),
+                safe_money(r["MONTHLY_TOTAL"]),
+                safe_money(r["TOTAL_PAID"]),
+                safe_money(r["EXPECTED"]),
+                safe_money(r["BALANCE"]),
+                int(r["MONTHS_BEHIND"]) if pd.notna(r["MONTHS_BEHIND"]) else 0,
+                r["STATUS"]
+            ])
+
+        col_widths = [
+            0.7 * inch,
+            3.3 * inch,
+            1.1 * inch,
+            1.1 * inch,
+            1.1 * inch,
+            1.1 * inch,
+            1.0 * inch,
+            1.0 * inch
+        ]
+
+        table = Table(data, colWidths=col_widths, repeatRows=1)
+
+        table.setStyle(TableStyle([
+            ("GRID", (0, 0), (-1, -1), 0.25, colors.black),
+
+            ("BACKGROUND", (0, 0), (-1, 0), colors.darkblue),
+            ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
+
+            ("FONTSIZE", (0, 0), (-1, -1), 8),
+            ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+
+            ("ALIGN", (0, 0), (0, -1), "CENTER"),
+            ("ALIGN", (2, 1), (-2, -1), "RIGHT"),
+            ("ALIGN", (-1, 1), (-1, -1), "CENTER")
+        ]))
+
+        return table
+
+    # ===================================================================================
+    # 📄 DOWNLOAD BUTTON
+    # ===================================================================================
+    st.subheader("📄 Download Executive Financial PDF")
+
+    if st.button("📄 Download Executive PDF Report"):
+
+        buffer = io.BytesIO()
+        doc = SimpleDocTemplate(buffer, pagesize=landscape(letter))
+        styles = getSampleStyleSheet()
+        elements = []
+
+        # ===================================================================================
+        # TITLE
+        # ===================================================================================
+        elements.append(Paragraph("Owerri Cultural Association (OCA)", styles["Title"]))
+        elements.append(Paragraph("Financial Report", styles["Heading1"]))
+        elements.append(Paragraph(datetime.datetime.now().strftime("%B %Y"), styles["Heading2"]))
+        elements.append(Spacer(1, 15))
+
+        elements.append(Paragraph("Financial Secretary: Mr. Ugo Harris Opara", styles["Normal"]))
+        elements.append(Paragraph("Assistant FS: Mrs. Pamela Uwakwe", styles["Normal"]))
+        elements.append(Paragraph("Treasurer: Lady Ogechi Iwu", styles["Normal"]))
+
+        elements.append(PageBreak())
+
+        # ===================================================================================
+        # 🟢 PAID IN FULL
+        # ===================================================================================
+        elements.append(Paragraph("🟢 Paid In Full", styles["Heading2"]))
+        elements.append(build_full_table(paid_full))
+        elements.append(PageBreak())
+
+        # ===================================================================================
+        # 🟡 CURRENT
+        # ===================================================================================
+        elements.append(Paragraph("🟡 Current (≤ 3 Months Behind)", styles["Heading2"]))
+        elements.append(build_full_table(current))
+        elements.append(PageBreak())
+
+        # ===================================================================================
+        # 🔴 BEHIND
+        # ===================================================================================
+        elements.append(Paragraph("🔴 Behind (3+ Months)", styles["Heading2"]))
+        elements.append(build_full_table(behind))
+        elements.append(PageBreak())
+
+        # ===================================================================================
+        # 📊 SUMMARY (SAFE FORMAT)
+        # ===================================================================================
+        elements.append(Paragraph("📊 Summary", styles["Heading2"]))
+
+        summary_data = [["Months Behind", "Count", "Total Balance"]]
+
+        for _, r in summary.iterrows():
+            summary_data.append([
+                int(r["MONTHS_BEHIND"]),
+                int(r["COUNT"]),
+                safe_money(r["TOTAL_BALANCE"])
+            ])
+
+        summary_table = Table(summary_data)
+        summary_table.setStyle([("GRID", (0, 0), (-1, -1), 0.5, colors.black)])
+
+        elements.append(summary_table)
+        elements.append(PageBreak())
+
+        # ===================================================================================
+        # 📈 CASHFLOW CHART
+        # ===================================================================================
+        elements.append(Paragraph("📈 Monthly Cashflow Analysis", styles["Heading2"]))
+
+        fig, ax = plt.subplots(figsize=(10, 5))
+        ax.plot(monthly_df["MONTH_STR"], monthly_df["Money In ($)"], marker='o', label="Money In")
+        ax.plot(monthly_df["MONTH_STR"], monthly_df["Money Out ($)"], marker='o', label="Money Out")
+        ax.legend()
+        plt.xticks(rotation=45)
+
+        img = io.BytesIO()
+        fig.savefig(img, format="png", dpi=200)
+        img.seek(0)
+
+        elements.append(Image(img, width=700, height=350))
+        elements.append(PageBreak())
+
+        # ===================================================================================
+        # 📆 ANNUAL BENCHMARK
+        # ===================================================================================
+        elements.append(Paragraph("📆 Annual Benchmark", styles["Heading2"]))
+
+        fig, ax = plt.subplots(figsize=(14, 7))
+        vals = [expected_full_year, total_received]
+
+        bars = ax.bar(["Expected", "Received"], vals)
+
+        for b in bars:
+            h = b.get_height()
+            ax.text(b.get_x() + b.get_width() / 2, h, f"${h:,.0f}", ha='center')
+
+        img = io.BytesIO()
+        fig.savefig(img, format="png", dpi=200)
+        img.seek(0)
+
+        elements.append(Image(img, width=750, height=400))
+
+        # ===================================================================================
+        # BUILD PDF
+        # ===================================================================================
+        doc.build(elements)
+        buffer.seek(0)
+
+        st.download_button(
+            "⬇️ Download Final PDF",
+            data=buffer,
+            file_name=f"OCA_Report_{datetime.datetime.now():%Y%m%d}.pdf",
+            mime="application/pdf"
+        )
+
+
+
+
+
+
+
+
+
+
+
+
 
 # ====================================================================================================
 # ATTENDANCE ENDED HERE
@@ -3183,6 +4017,16 @@ def financial_ui():
         else:
             st.info("No members available to delete.")
 
+
+
+
+
+# ===================================================================================
+# MAIN APP
+# # # ===================================================================================
+# def main():
+#     financial_ui()
+#     oca_dues_ui()
 
 # ======================================================================================================================================================
 #                RUN APPLICATION
@@ -4931,9 +5775,4 @@ def analyze_membership_debt():
 
 
 # =========================================
-
 # 
-
-
-
-
