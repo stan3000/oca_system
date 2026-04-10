@@ -2746,7 +2746,7 @@ def financial_ui():
         (24, "MRS JULIANA OJIBE", 0),
         (25, "MR THEOPHILUS N ONYENEKE", 0), (25, "MRS BEATRICE ONYENEKE", 35.01),
         (26, "SIR ETHELBERT R ONYEWUNYI", 0),
-        (27, "MR OKEY S ONYENWE", 0), (27, "MRS ONYENWE", 0),
+        (27, "MR SAMUEL O ONYENWEE", 0), (27, "MRS ONYENWE", 0),
         (28, "MR DAMIAN ONYEUKWU", 0),
         (29, "MR EMEKA OPARAOCHEKWE", 0),
         (30, "MR WILSON UDENJI", 0),
