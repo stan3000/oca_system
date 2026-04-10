@@ -2722,7 +2722,7 @@ def financial_ui():
     members_data = [
         (1, "MR KELECHI ACHOLONU", 0), (1, "MRS NKIRU ACHOLONU", 0),
         (2, "MRS ROSEMARY ANYANWA", 0),
-        (3, "MR HYACIENTH ANYASO CHIEF", 0), (3, "MRS LYDIA ANYASO LOLO", 0),
+        (3, "MR HYACINTH I ANYASO CHIEF", 0), (3, "MRS LYDIA ANYASO LOLO", 0),
         (4, "DOC NNEKA CHUKWU", 0),
         (5, "MR CHIAGORO CHUKWUMA", 0),
         (6, "MR EMMA DIALA", 0), (6, "MRS JOYCE DIALA", 0),
