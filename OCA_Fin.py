@@ -2743,7 +2743,7 @@ def financial_ui():
         (21, "MRS VIVIAN OBICHERE", 0),
         (22, "MR ETHEBERT OGBUEHI", 0),
         (23, "MR KINSLEY OGWUDIRE", 0), (23, "MRS IJEOMA OGWUDIRE", 0),
-        (24, "MRS JULIE OJIBE", 0),
+        (24, "MRS JULIANA OJIBE", 0),
         (25, "MR THEOPHILUS N ONYENEKE", 0), (25, "MRS BEATRICE ONYENEKE", 35.01),
         (26, "SIR ETHELBERT R ONYEWUNYI", 0),
         (27, "MR OKEY S ONYENWE", 0), (27, "MRS ONYENWE", 0),
