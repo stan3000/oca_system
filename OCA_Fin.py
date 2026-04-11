@@ -1193,9 +1193,9 @@ def attendance_ui():
 
     col1, col2 = st.columns([1, 5])
 
-    # with col1:
-    #     logo_path = r"C:/Users/stans/OneDrive/Desktop/OCA/OCA LOGO/OCA LOGO.JPG"
-    #     st.image(logo_path, width=120)
+    with col1:
+        logo_path = r"C:/Users/stans/OneDrive/Desktop/OCA/OCA LOGO/OCA LOGO.JPG"
+        st.image(logo_path, width=120)
 
     with col2:
         st.title("🧾 OCA Attendance & Analytics Dashboard")
@@ -1958,9 +1958,9 @@ def attendance_ui():
                 p.font.color.rgb = RGBColor(220, 220, 220)
                 p.alignment = PP_ALIGN.CENTER
 
-                # # Logo
-                # logo_path = r"C:/Users/stans/OneDrive/Desktop/OCA/OCA LOGO/OCA LOGO.JPG"
-                # slide.shapes.add_picture(logo_path, Inches(3.4), Inches(4.6), width=Inches(3))
+                # Logo
+                logo_path = r"C:/Users/stans/OneDrive/Desktop/OCA/OCA LOGO/OCA LOGO.JPG"
+                slide.shapes.add_picture(logo_path, Inches(3.4), Inches(4.6), width=Inches(3))
 
                 # ================================
                 # 2️⃣ PER-MEMBER STACKED BREAKDOWN
@@ -2148,7 +2148,7 @@ def attendance_ui():
             # -------------------------------
             # 2) TITLE PAGE WITH LOGO
             # -------------------------------
-            # logo_path = r"C:/Users/stans/OneDrive/Desktop/OCA/OCA LOGO/OCA LOGO.JPG"
+            logo_path = r"C:/Users/stans/OneDrive/Desktop/OCA/OCA LOGO/OCA LOGO.JPG"
 
             try:
                 story.append(Spacer(1, 40))
@@ -2577,10 +2577,10 @@ def attendance_ui():
         overlay.fill.transparency = 0.25
         overlay.line.fill.background()
 
-        # # Add OCA logo
-        # logo_path = r"C:\Users\stans\OneDrive\Desktop\OCA\OCA LOGO\OCA LOGO.jpg"
-        # if os.path.exists(logo_path):
-        #     title_slide.shapes.add_picture(logo_path, Inches(0.6), Inches(0.6), width=Inches(2))
+        # Add OCA logo
+        logo_path = r"C:\Users\stans\OneDrive\Desktop\OCA\OCA LOGO\OCA LOGO.jpg"
+        if os.path.exists(logo_path):
+            title_slide.shapes.add_picture(logo_path, Inches(0.6), Inches(0.6), width=Inches(2))
 
         # --- Add professional finance-themed image ---
         # ✅ Updated image path
@@ -2712,9 +2712,88 @@ def financial_ui():
         key="dues_upload"
     )
 
+    # if uploaded_file is None:
+    #     st.info("Upload bank statement to analyze dues")
+    #     return
+
     if uploaded_file is None:
         st.info("Upload bank statement to analyze dues")
         return
+
+    # Read CSV
+    df = pd.read_csv(uploaded_file)
+
+    # Normalize column names
+    df.columns = df.columns.str.strip().str.upper()
+
+    # Ensure POSTED DATE is datetime
+    df["POSTED DATE"] = pd.to_datetime(df["POSTED DATE"], errors="coerce")
+
+    # Filter only Zelle credits (dues)
+    df_zelle = df[
+        (df["DESCRIPTION"].str.contains("ZELLE", case=False, na=False)) &
+        (df["CREDIT/DEBIT"].str.upper() == "CREDIT")
+        ].copy()
+
+    # Extract Member Name
+    def extract_name(desc):
+        match = re.search(r"ZELLE FROM (.*)", str(desc))
+        return match.group(1).strip() if match else "UNKNOWN"
+
+    df_zelle["NAME"] = df_zelle["DESCRIPTION"].apply(extract_name)
+
+    # Clean Amount
+    df_zelle["AMOUNT"] = pd.to_numeric(df_zelle["AMOUNT"], errors="coerce")
+
+    # Sort by date
+    df_zelle = df_zelle.sort_values(by="POSTED DATE", ascending=False)
+
+    # ================================
+    # 📊 TRANSACTION TABLE (EXPANDER)
+    # ================================
+    with st.expander(f"📊 Zelle Dues Transactions ({len(df_zelle)})", expanded=False):
+        st.dataframe(
+            df_zelle[
+                [
+                    "POSTED DATE",
+                    "NAME",
+                    "DESCRIPTION",
+                    "AMOUNT",
+                    "TYPE",
+                    "CREDIT/DEBIT"
+                ]
+            ],
+            use_container_width=True
+        )
+
+    # ================================
+    # 💰 SIMPLE TOTAL (NO BREAKAGE)
+    # ================================
+    with st.expander("💰 Total Contributions (Quick View)", expanded=True):
+        try:
+            total_amount = df_zelle["AMOUNT"].sum()
+            st.metric("Total Collected via Zelle", f"${total_amount:,.2f}")
+        except:
+            st.warning("Unable to calculate total")
+
+
+
+
+    # ================================
+    # 💰 SUMMARY TABLE (EXPANDER)
+    # ================================
+    summary = (
+        df_zelle.groupby("NAME")["AMOUNT"]
+        .sum()
+        .reset_index()
+        .sort_values(by="AMOUNT", ascending=False)
+    )
+
+    with st.expander(f"💰 Total Contributions by Member ({len(summary)})", expanded=True):
+        st.dataframe(summary, use_container_width=True)
+
+
+
 
     # ===================================================================================
     # MASTER MEMBER LIST (FULL)
@@ -2722,7 +2801,7 @@ def financial_ui():
     members_data = [
         (1, "MR KELECHI ACHOLONU", 0), (1, "MRS NKIRU ACHOLONU", 0),
         (2, "MRS ROSEMARY ANYANWA", 0),
-        (3, "MR HYACINTH I ANYASO CHIEF", 0), (3, "MRS LYDIA ANYASO LOLO", 0),
+        (3, "MR HYACIENTH ANYASO CHIEF", 0), (3, "MRS LYDIA ANYASO LOLO", 0),
         (4, "DOC NNEKA CHUKWU", 0),
         (5, "MR CHIAGORO CHUKWUMA", 0),
         (6, "MR EMMA DIALA", 0), (6, "MRS JOYCE DIALA", 0),
@@ -2743,10 +2822,10 @@ def financial_ui():
         (21, "MRS VIVIAN OBICHERE", 0),
         (22, "MR ETHEBERT OGBUEHI", 0),
         (23, "MR KINSLEY OGWUDIRE", 0), (23, "MRS IJEOMA OGWUDIRE", 0),
-        (24, "MRS JULIANA OJIBE", 0),
+        (24, "MRS JULIE OJIBE", 0),
         (25, "MR THEOPHILUS N ONYENEKE", 0), (25, "MRS BEATRICE ONYENEKE", 35.01),
         (26, "SIR ETHELBERT R ONYEWUNYI", 0),
-        (27, "MR SAMUEL O ONYENWEE", 0), (27, "MRS ONYENWE", 0),
+        (27, "MR OKEY S ONYENWE", 0), (27, "MRS ONYENWE", 0),
         (28, "MR DAMIAN ONYEUKWU", 0),
         (29, "MR EMEKA OPARAOCHEKWE", 0),
         (30, "MR WILSON UDENJI", 0),
@@ -2803,7 +2882,11 @@ def financial_ui():
     # ===================================================================================
     # LOAD BANK
     # ===================================================================================
+    # df = pd.read_csv(uploaded_file, encoding="ISO-8859-1")
+
+    uploaded_file.seek(0)  # ✅ RESET FILE POINTER (VERY IMPORTANT)
     df = pd.read_csv(uploaded_file, encoding="ISO-8859-1")
+
     df.columns = df.columns.str.upper().str.strip()
 
     df["POSTED DATE"] = pd.to_datetime(df["POSTED DATE"], errors="coerce")
@@ -3434,36 +3517,10 @@ def financial_ui():
         # ===================================================================================
         slide = prs.slides.add_slide(prs.slide_layouts[6])
 
-        
-        # BASE_DIR = os.path.dirname(__file__)
-        # logo_path = os.path.join(BASE_DIR, "assets", "FNEW_ACE_LOGO.png")     # NEW LOGO UPDATE 4/10/2026
+        logo_path = r"C:\Users\stans\OneDrive\Desktop\OCA\01 -STANLEY'S ADMINISTRATION - PRESIDENT\OCA NEW LOGO\OCA - FNEW ACE LOGO.png"
 
-
-        
-
-        # BASE_DIR = os.path.dirname(__file__)
-        # logo_path = os.path.join(BASE_DIR, "assets", "FNEW_ACE_LOGO.png")
-        
-        # print("DEBUG PATH:", logo_path)
-        # print("FILE EXISTS:", os.path.exists(logo_path))
-        
-        # if os.path.exists(logo_path):
-        #     slide.shapes.add_picture(logo_path, Inches(3.5), Inches(0.3), width=Inches(2))
-        # else:
-        #     print("❌ Logo NOT FOUND")
-
-
-
-
-
-
-
-        
-
-        # logo_path = r"C:\Users\stans\OneDrive\Desktop\OCA\01 -STANLEY'S ADMINISTRATION - PRESIDENT\OCA NEW LOGO\OCA - FNEW ACE LOGO.png"
-
-        # if os.path.exists(logo_path):
-        #     slide.shapes.add_picture(logo_path, Inches(3.5), Inches(0.3), width=Inches(2))
+        if os.path.exists(logo_path):
+            slide.shapes.add_picture(logo_path, Inches(3.5), Inches(0.3), width=Inches(2))
 
         org_box = slide.shapes.add_textbox(Inches(1), Inches(1.5), Inches(8), Inches(1))
         tf = org_box.text_frame
