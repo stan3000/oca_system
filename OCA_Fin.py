@@ -1193,9 +1193,9 @@ def attendance_ui():
 
     col1, col2 = st.columns([1, 5])
 
-    with col1:
-        logo_path = r"C:/Users/stans/OneDrive/Desktop/OCA/OCA LOGO/OCA LOGO.JPG"
-        st.image(logo_path, width=120)
+    # with col1:
+    #     logo_path = r"C:/Users/stans/OneDrive/Desktop/OCA/OCA LOGO/OCA LOGO.JPG"
+    #     st.image(logo_path, width=120)
 
     with col2:
         st.title("🧾 OCA Attendance & Analytics Dashboard")
@@ -1958,9 +1958,9 @@ def attendance_ui():
                 p.font.color.rgb = RGBColor(220, 220, 220)
                 p.alignment = PP_ALIGN.CENTER
 
-                # Logo
-                logo_path = r"C:/Users/stans/OneDrive/Desktop/OCA/OCA LOGO/OCA LOGO.JPG"
-                slide.shapes.add_picture(logo_path, Inches(3.4), Inches(4.6), width=Inches(3))
+                # # Logo
+                # logo_path = r"C:/Users/stans/OneDrive/Desktop/OCA/OCA LOGO/OCA LOGO.JPG"
+                # slide.shapes.add_picture(logo_path, Inches(3.4), Inches(4.6), width=Inches(3))
 
                 # ================================
                 # 2️⃣ PER-MEMBER STACKED BREAKDOWN
@@ -2148,7 +2148,7 @@ def attendance_ui():
             # -------------------------------
             # 2) TITLE PAGE WITH LOGO
             # -------------------------------
-            logo_path = r"C:/Users/stans/OneDrive/Desktop/OCA/OCA LOGO/OCA LOGO.JPG"
+            # logo_path = r"C:/Users/stans/OneDrive/Desktop/OCA/OCA LOGO/OCA LOGO.JPG"
 
             try:
                 story.append(Spacer(1, 40))
@@ -2577,10 +2577,10 @@ def attendance_ui():
         overlay.fill.transparency = 0.25
         overlay.line.fill.background()
 
-        # Add OCA logo
-        logo_path = r"C:\Users\stans\OneDrive\Desktop\OCA\OCA LOGO\OCA LOGO.jpg"
-        if os.path.exists(logo_path):
-            title_slide.shapes.add_picture(logo_path, Inches(0.6), Inches(0.6), width=Inches(2))
+        # # Add OCA logo
+        # logo_path = r"C:\Users\stans\OneDrive\Desktop\OCA\OCA LOGO\OCA LOGO.jpg"
+        # if os.path.exists(logo_path):
+        #     title_slide.shapes.add_picture(logo_path, Inches(0.6), Inches(0.6), width=Inches(2))
 
         # --- Add professional finance-themed image ---
         # ✅ Updated image path
